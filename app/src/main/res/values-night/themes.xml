@@ -1,0 +1,36 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.GenshinStatistics" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/milk</item>
+        <item name="colorPrimaryVariant">@color/milk</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/milk</item>
+        <item name="colorSecondaryVariant">@color/milk</item>
+        <item name="colorOnSecondary">@color/milk</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="primaryTextColor">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="secondaryTextColor">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="CustomDatePicker" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="colorBackgroundFloating">@color/black</item> <!-- Header background -->
+        <item name="colorSecondary">@color/milk</item> <!-- footer background -->
+        <item name="colorAccent">@color/black</item>   <!-- Selection highlight -->
+        <item name="android:textColorPrimary">@color/black</item> <!-- Header text -->
+        <item name="android:textColorSecondary">@color/black</item> <!-- Calendar text -->
+        <item name="android:windowBackground">@color/milk</item> <!-- Calendar background -->
+    </style>
+
+</resources>

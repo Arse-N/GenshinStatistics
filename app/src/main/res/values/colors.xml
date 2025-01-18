@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#454C5C</color>
+    <color name="white">#FEFDF9</color>
+    <color name="milk">#EAE6DD</color>
+    <color name="gray">#8C9197</color>
+    <color name="light_gold">#CEAB81</color>
+
+<!--    rarity-->
+    <color name="rarity_v1">#678140</color>
+    <color name="rarity_v2">#90B720</color>
+    <color name="rarity_v3">#F5B550</color>
+    <color name="rarity_v4">#DE7626</color>
+    <color name="rarity_v5">#E31737</color>
+
+    <!--    element-->
+    <color name="pyro">#DD6664</color>
+    <color name="electro">#D351DF</color>
+    <color name="anemo">#00FFA1</color>
+    <color name="geo">#FFD653</color>
+    <color name="cryo">#48CFEF</color>
+    <color name="hydro">#4275DB</color>
+    <color name="dendro">#92FC00</color>
+
+<!--charachter rarity-->
+    <color name="epic">#9273AB</color>
+    <color name="legendar">#B87A31</color>
+</resources>

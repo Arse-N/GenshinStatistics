@@ -1,0 +1,32 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.GenshinStatistics" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/milk</item>
+        <item name="colorPrimaryVariant">@color/milk</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/milk</item>
+        <item name="colorSecondaryVariant">@color/milk</item>
+        <item name="colorOnSecondary">@color/milk</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <style name="primaryTextColor">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="secondaryTextColor">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="CustomDatePicker" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="colorBackgroundFloating">@color/black</item>
+        <item name="colorSecondary">@color/milk</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="android:windowBackground">@color/milk</item>
+    </style>
+
+</resources>

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Genshin Statistics</string>
+    <string name="title_home">Home</string>
+    <string name="title_history">History</string>
+    <string name="charachter">Charachter</string>
+    <string name="weapon">Weapon</string>
+    <string name="standart">Standart</string>
+    <string name="add_item">Add Item</string>
+    <string name="name">Name:</string>
+    <string name="win_date">Win Date:</string>
+    <string name="choose_date">Choose Date</string>
+    <string name="search_item">Search Item</string>
+</resources>
