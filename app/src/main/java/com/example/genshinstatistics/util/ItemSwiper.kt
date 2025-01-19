@@ -13,10 +13,10 @@ abstract class ItemSwiper(
     private val context: Context
 ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
-    private val deleteIcon: Drawable? = ContextCompat.getDrawable(context, R.drawable.ic_location)
-    private val editIcon: Drawable? = ContextCompat.getDrawable(context, R.drawable.ic_search)
-    private val deleteColor = ContextCompat.getColor(context, R.color.rarity_v5)
-    private val editColor = ContextCompat.getColor(context, R.color.rarity_v1)
+    private val deleteIcon: Drawable? = ContextCompat.getDrawable(context, R.drawable.ic_remove)
+    private val editIcon: Drawable? = ContextCompat.getDrawable(context, R.drawable.ic_edit)
+    private val deleteColor = ContextCompat.getColor(context, R.color.pyro)
+    private val editColor = ContextCompat.getColor(context, R.color.light_gold)
 
     private val swipeLimitPx = 200f // Swipe limit in pixels
 
@@ -72,7 +72,7 @@ abstract class ItemSwiper(
                 val iconMargin = (itemView.height - it.intrinsicHeight) / 2
                 val iconTop = itemView.top + iconMargin
                 val iconLeft = itemView.left + iconMargin
-                val iconRight = iconLeft + it.intrinsicWidth
+                val iconRight = 50
                 val iconBottom = iconTop + it.intrinsicHeight
                 it.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                 it.draw(c)
