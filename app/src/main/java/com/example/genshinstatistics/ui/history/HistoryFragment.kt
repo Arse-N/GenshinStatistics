@@ -1,5 +1,6 @@
 package com.example.genshinstatistics.ui.history
 
+import ItemSwiper
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -16,7 +17,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.adapters.HistoryItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
@@ -43,10 +46,29 @@ class HistoryFragment : Fragment() {
 
         val historyItemsList: ArrayList<HistoryItem> = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
 
+        val itemSwiper = object : ItemSwiper(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        removeItem(viewHolder.adapterPosition, historyItemsList);
+                    }
+
+                    ItemTouchHelper.RIGHT -> {
+                        showNewDialog(historyItemsList)
+                    }
+
+                }
+
+            }
+        }
+
         binding.addButton.setOnClickListener {
-            showDialog(historyItemsList)
+            showNewDialog(historyItemsList)
         }
         setupRecyclerView(historyItemsList)
+
+        val itemTouchHelper = ItemTouchHelper(itemSwiper)
+        itemTouchHelper.attachToRecyclerView(binding.historyItems)
 
         return binding.root
     }
@@ -58,11 +80,12 @@ class HistoryFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = historyAdapter
         }
+
     }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun showDialog(historyItemsList: ArrayList<HistoryItem>) {
+    private fun showNewDialog(historyItemsList: ArrayList<HistoryItem>) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.add_history_item_dialog, null)
         val spinner: AutoCompleteTextView = dialogView.findViewById(R.id.item_selector)
         val numberPicker: NumberPicker = dialogView.findViewById(R.id.wish_rate_selector)
@@ -238,6 +261,19 @@ class HistoryFragment : Fragment() {
             historyAdapter.notifyItemChanged(historyItemsList.size - 2)
         }
     }
+
+    private fun updateItem(position: Int, newHistoryItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
+        historyItemsList.add(position, newHistoryItem)
+        historyAdapter.notifyItemChanged(position)
+        JsonUtil.writeToJson(requireContext(), historyItemsList)
+    }
+
+    private fun removeItem(position: Int, historyItemsList: ArrayList<HistoryItem>) {
+        historyItemsList.removeAt(position)
+        historyAdapter.notifyItemRemoved(position)
+        JsonUtil.writeToJson(requireContext(), historyItemsList)
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
