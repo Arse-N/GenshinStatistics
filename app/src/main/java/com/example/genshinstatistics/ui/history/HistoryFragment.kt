@@ -109,8 +109,8 @@ class HistoryFragment : Fragment() {
         var chosenDate: String? = historyItem.winDate
         var chosenRate: Int? = historyItem.pullRate
 
-        setUpSpinnerData(spinner) { item -> chosenItem = item }
-        setUpDatePicker(dialogView) { date -> chosenDate = date }
+        setUpSpinnerData(spinner, chosenItem) { item -> chosenItem = item }
+        setUpDatePicker(dialogView, chosenDate) { date -> chosenDate = date }
         setUpWishRateData(dialogView, { rate -> chosenRate = rate }, chosenRate)
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
@@ -249,12 +249,22 @@ class HistoryFragment : Fragment() {
 
     private fun setUpDatePicker(view: View, selectedDate: String?, onDateSelected: (String?) -> Unit) {
         val dateInput: EditText = view.findViewById(R.id.win_date_selector)
+        val calendar = Calendar.getInstance()
 
-        // Set the initial date if selectedDate is not null or empty
+        // Set initial values for year, month, and day
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = calendar.get(Calendar.MONTH)
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        // Set the input field to the selected date or today's date
         if (!selectedDate.isNullOrEmpty()) {
             dateInput.setText(selectedDate)
+        } else {
+            val todayDate = "$currentDay/${currentMonth + 1}/$currentYear"
+            dateInput.setText(todayDate)
         }
 
+        // Create DatePickerDialog
         val datePickerDialog = DatePickerDialog(
             view.context,
             R.style.CustomDatePicker,
@@ -263,28 +273,18 @@ class HistoryFragment : Fragment() {
                 dateInput.setText(newSelectedDate)
                 onDateSelected(newSelectedDate)
             },
-            year, month, day
+            currentYear, currentMonth, currentDay
         )
 
-        dateInput.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
+        // Disable future dates
+        datePickerDialog.datePicker.maxDate = calendar.timeInMillis
 
-            val datePickerDialog = DatePickerDialog(
-                view.context,
-                R.style.CustomDatePicker,
-                { _, selectedYear, selectedMonth, selectedDay ->
-                    val newSelectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                    dateInput.setText(newSelectedDate)
-                    onDateSelected(newSelectedDate)
-                },
-                year, month, day
-            )
+        // Open the DatePickerDialog on input click
+        dateInput.setOnClickListener {
             datePickerDialog.show()
         }
     }
+
 
 
     private fun addNewItem(historyItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
@@ -297,7 +297,7 @@ class HistoryFragment : Fragment() {
     }
 
     private fun updateItem(position: Int, newHistoryItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
-        historyItemsList.add(position, newHistoryItem)
+        historyItemsList[position] = newHistoryItem;
         historyAdapter.notifyItemChanged(position)
         JsonUtil.writeToJson(requireContext(), historyItemsList)
     }
