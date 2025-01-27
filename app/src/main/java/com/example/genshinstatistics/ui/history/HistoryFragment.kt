@@ -1,5 +1,6 @@
 package com.example.genshinstatistics.ui.history
 
+import ItemSwiper
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -16,7 +17,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.adapters.HistoryItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
@@ -43,10 +46,40 @@ class HistoryFragment : Fragment() {
 
         val historyItemsList: ArrayList<HistoryItem> = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
 
+        val itemSwiper = object : ItemSwiper(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        removeItem(viewHolder.adapterPosition, historyItemsList);
+                    }
+
+                    ItemTouchHelper.RIGHT -> {
+                        val historyItem: HistoryItem = historyItemsList.get(viewHolder.adapterPosition)
+                        showItemDialog(
+                            historyItemsList,
+                            historyItem,
+                            viewHolder.adapterPosition
+                        )
+                    }
+
+                }
+
+            }
+        }
+
         binding.addButton.setOnClickListener {
-            showDialog(historyItemsList)
+            showItemDialog(
+                historyItemsList,
+                HistoryItem(
+                    id = BaseUtil.generateCode(),
+                ),
+                null
+            )
         }
         setupRecyclerView(historyItemsList)
+
+        val itemTouchHelper = ItemTouchHelper(itemSwiper)
+        itemTouchHelper.attachToRecyclerView(binding.historyItems)
 
         return binding.root
     }
@@ -58,69 +91,72 @@ class HistoryFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = historyAdapter
         }
+
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun showDialog(historyItemsList: ArrayList<HistoryItem>) {
+    private fun showItemDialog(
+        historyItemsList: ArrayList<HistoryItem>,
+        historyItem: HistoryItem,
+        position:Int?
+    ) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.add_history_item_dialog, null)
         val spinner: AutoCompleteTextView = dialogView.findViewById(R.id.item_selector)
-        val numberPicker: NumberPicker = dialogView.findViewById(R.id.wish_rate_selector)
+        val errorText: TextView = dialogView.findViewById(R.id.item_selector_error)
+        var chosenItem: String? = historyItem.name
+        var chosenDate: String? = historyItem.winDate
+        var chosenRate: Int? = historyItem.pullRate
 
-        var selectedItem: String? = null
-        var selectedDate: String? = null
-        var pullRate: Int = 1
-
-        setUpSpinnerData(spinner) { item -> selectedItem = item }
-        setUpWishRateData(dialogView) { rate -> pullRate = rate }
-        setUpDatePicker(dialogView) { date -> selectedDate = date }
-
+        setUpSpinnerData(spinner, chosenItem) { item -> chosenItem = item }
+        setUpDatePicker(dialogView, chosenDate) { date -> chosenDate = date }
+        setUpWishRateData(dialogView, { rate -> chosenRate = rate }, chosenRate)
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
 
-        val closeButton: View = dialogView.findViewById(R.id.dialog_close)
-        closeButton.setOnClickListener {
+        dialogView.findViewById<View>(R.id.dialog_close).setOnClickListener {
+            historyAdapter.notifyDataSetChanged()
             dialog.dismiss()
         }
 
-        val doneButton: View = dialogView.findViewById(R.id.dialog_done)
-        doneButton.setOnClickListener {
+        dialogView.findViewById<View>(R.id.dialog_done).setOnClickListener {
             var isValid = true
-            val errorText: TextView = dialogView.findViewById(R.id.item_selector_error)
 
             // Validate selected item
-            if (selectedItem.isNullOrEmpty()) {
+            if (chosenItem.isNullOrEmpty()) {
                 errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.rarity_v5))
                 isValid = false
             } else {
                 errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             }
 
-            // Ensure a valid date is set
-            if (selectedDate.isNullOrEmpty()) {
-                selectedDate = BaseUtil.getFormattedDate()
+            if (chosenDate.isNullOrEmpty()) {
+                chosenDate = BaseUtil.getFormattedDate()
             }
 
-            // If valid, add a new history item
             if (isValid) {
-                val historyItem = HistoryItem(
-                    id = BaseUtil.generateCode(),
-                    name = selectedItem,
-                    pullRate = pullRate,
-                    pullRateColor = BaseUtil.chooseColor(pullRate),
-                    winDate = selectedDate
-                )
-                addNewItem(historyItem, historyItemsList)
-                dialog.dismiss()
+                historyItem.name = chosenItem
+                historyItem.winDate = chosenDate
+                historyItem.pullRate = chosenRate
+                historyItem.pullRateColor = chosenRate?.let { it1 -> BaseUtil.chooseColor(requireContext(), it1) }
+                historyItem.winDate = chosenDate
+                if(position == null)
+                    addNewItem(historyItem, historyItemsList)
+                else
+                    updateItem(position, historyItem, historyItemsList)
             }
+            dialog.dismiss();
         }
 
         dialog.show()
     }
 
 
-    private fun setUpSpinnerData(spinner: AutoCompleteTextView, onItemSelected: (String?) -> Unit) {
+
+
+    private fun setUpSpinnerData(spinner: AutoCompleteTextView, selectedItem:String?, onItemSelected: (String?) -> Unit) {
         val sortedItems = ArchiveCharacterData.ITEMS
             .map { it.name ?: "Unknown" }
             .sortedByDescending { it }
@@ -129,6 +165,7 @@ class HistoryFragment : Fragment() {
 
         spinner.setAdapter(adapter)
         spinner.threshold = 1
+        spinner.setText(selectedItem)
         spinner.setDropDownHeight(500)
 
         spinner.setOnClickListener {
@@ -142,14 +179,23 @@ class HistoryFragment : Fragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setUpWishRateData(view: View, onRateChanged: (Int) -> Unit) {
+    private fun setUpWishRateData(view: View, onRateChanged: (Int) -> Unit, rateValue: Int?) {
         val numberPicker: NumberPicker = view.findViewById(R.id.wish_rate_selector)
         val arrowDown: ImageButton = view.findViewById(R.id.number_arrow_down)
         val arrowUp: ImageButton = view.findViewById(R.id.number_arrow_up)
 
+        // Configure NumberPicker range
         numberPicker.minValue = 1
         numberPicker.maxValue = 90
-        numberPicker.value = 1
+
+        // Set initial value and notify callback
+        numberPicker.value = rateValue ?: 1
+        onRateChanged(numberPicker.value)
+
+        // Listen for manual value changes
+        numberPicker.setOnValueChangedListener { _, _, newVal ->
+            onRateChanged(newVal)
+        }
 
         val delayMillis: Long = 120
         val handler = Handler(Looper.getMainLooper())
@@ -176,12 +222,12 @@ class HistoryFragment : Fragment() {
             }
         }
 
+        // Handle increment button
         arrowUp.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     handler.post(incrementRunnable)
                 }
-
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     handler.removeCallbacks(incrementRunnable)
                 }
@@ -189,46 +235,60 @@ class HistoryFragment : Fragment() {
             true
         }
 
-
+        // Handle decrement button
         arrowDown.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     handler.post(decrementRunnable)
                 }
-
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     handler.removeCallbacks(decrementRunnable)
                 }
             }
             true
         }
-
-        // Return the current value of the number picker
-        onRateChanged(numberPicker.value)
     }
 
-    private fun setUpDatePicker(view: View, onDateSelected: (String?) -> Unit) {
+
+    private fun setUpDatePicker(view: View, selectedDate: String?, onDateSelected: (String?) -> Unit) {
         val dateInput: EditText = view.findViewById(R.id.win_date_selector)
+        val calendar = Calendar.getInstance()
 
+        // Set initial values for year, month, and day
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = calendar.get(Calendar.MONTH)
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        // Set the input field to the selected date or today's date
+        if (!selectedDate.isNullOrEmpty()) {
+            dateInput.setText(selectedDate)
+        } else {
+            val todayDate = "$currentDay/${currentMonth + 1}/$currentYear"
+            dateInput.setText(todayDate)
+        }
+
+        // Create DatePickerDialog
+        val datePickerDialog = DatePickerDialog(
+            view.context,
+            R.style.CustomDatePicker,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val newSelectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                dateInput.setText(newSelectedDate)
+                onDateSelected(newSelectedDate)
+            },
+            currentYear, currentMonth, currentDay
+        )
+
+        // Disable future dates
+        datePickerDialog.datePicker.maxDate = calendar.timeInMillis
+
+        // Open the DatePickerDialog on input click
         dateInput.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePickerDialog = DatePickerDialog(
-                view.context,
-                R.style.CustomDatePicker,
-                { _, selectedYear, selectedMonth, selectedDay ->
-                    val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                    dateInput.setText(selectedDate)
-                    onDateSelected(selectedDate)
-                },
-                year, month, day
-            )
             datePickerDialog.show()
         }
     }
+
+
 
     private fun addNewItem(historyItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
         historyItemsList.add(historyItem)
@@ -238,6 +298,19 @@ class HistoryFragment : Fragment() {
             historyAdapter.notifyItemChanged(historyItemsList.size - 2)
         }
     }
+
+    private fun updateItem(position: Int, newHistoryItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
+        historyItemsList[position] = newHistoryItem;
+        historyAdapter.notifyItemChanged(position)
+        JsonUtil.writeToJson(requireContext(), historyItemsList)
+    }
+
+    private fun removeItem(position: Int, historyItemsList: ArrayList<HistoryItem>) {
+        historyItemsList.removeAt(position)
+        historyAdapter.notifyItemRemoved(position)
+        JsonUtil.writeToJson(requireContext(), historyItemsList)
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

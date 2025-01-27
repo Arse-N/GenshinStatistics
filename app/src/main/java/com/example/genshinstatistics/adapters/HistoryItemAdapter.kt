@@ -69,7 +69,7 @@ class HistoryItemAdapter(
         val nameTextView: TextView = itemView.findViewById(R.id.name_value)
         val signImageView: ImageView = itemView.findViewById(R.id.sign_icon)
         val iconImageView: ImageView = itemView.findViewById(R.id.item_img)
-        val iconBgCardView: CardView = itemView.findViewById(R.id.color_card)
+        val iconBgCardView: LinearLayout = itemView.findViewById(R.id.color_card)
         val birthDateTextView: TextView = itemView.findViewById(R.id.birthdate_value)
         val locationTextView: TextView = itemView.findViewById(R.id.location_value)
         val pullRateTextView: TextView = itemView.findViewById(R.id.number_value)
