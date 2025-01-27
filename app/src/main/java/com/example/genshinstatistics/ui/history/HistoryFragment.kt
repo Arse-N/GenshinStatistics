@@ -54,7 +54,12 @@ class HistoryFragment : Fragment() {
                     }
 
                     ItemTouchHelper.RIGHT -> {
-                        showNewDialog(historyItemsList)
+                        val historyItem: HistoryItem = historyItemsList.get(viewHolder.adapterPosition)
+                        showItemDialog(
+                            historyItemsList,
+                            historyItem,
+                            viewHolder.adapterPosition
+                        )
                     }
 
                 }
@@ -63,7 +68,13 @@ class HistoryFragment : Fragment() {
         }
 
         binding.addButton.setOnClickListener {
-            showNewDialog(historyItemsList)
+            showItemDialog(
+                historyItemsList,
+                HistoryItem(
+                    id = BaseUtil.generateCode(),
+                ),
+                null
+            )
         }
         setupRecyclerView(historyItemsList)
 
@@ -84,66 +95,68 @@ class HistoryFragment : Fragment() {
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun showNewDialog(historyItemsList: ArrayList<HistoryItem>) {
+    private fun showItemDialog(
+        historyItemsList: ArrayList<HistoryItem>,
+        historyItem: HistoryItem,
+        position:Int?
+    ) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.add_history_item_dialog, null)
         val spinner: AutoCompleteTextView = dialogView.findViewById(R.id.item_selector)
-        val numberPicker: NumberPicker = dialogView.findViewById(R.id.wish_rate_selector)
+        val errorText: TextView = dialogView.findViewById(R.id.item_selector_error)
+        var chosenItem: String? = historyItem.name
+        var chosenDate: String? = historyItem.winDate
+        var chosenRate: Int? = historyItem.pullRate
 
-        var selectedItem: String? = null
-        var selectedDate: String? = null
-        var pullRate: Int = 1
-
-        setUpSpinnerData(spinner) { item -> selectedItem = item }
-        setUpWishRateData(dialogView) { rate -> pullRate = rate }
-        setUpDatePicker(dialogView) { date -> selectedDate = date }
-
+        setUpSpinnerData(spinner) { item -> chosenItem = item }
+        setUpDatePicker(dialogView) { date -> chosenDate = date }
+        setUpWishRateData(dialogView, { rate -> chosenRate = rate }, chosenRate)
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
 
-        val closeButton: View = dialogView.findViewById(R.id.dialog_close)
-        closeButton.setOnClickListener {
+        dialogView.findViewById<View>(R.id.dialog_close).setOnClickListener {
+            historyAdapter.notifyDataSetChanged()
             dialog.dismiss()
         }
 
-        val doneButton: View = dialogView.findViewById(R.id.dialog_done)
-        doneButton.setOnClickListener {
+        dialogView.findViewById<View>(R.id.dialog_done).setOnClickListener {
             var isValid = true
-            val errorText: TextView = dialogView.findViewById(R.id.item_selector_error)
 
             // Validate selected item
-            if (selectedItem.isNullOrEmpty()) {
+            if (chosenItem.isNullOrEmpty()) {
                 errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.rarity_v5))
                 isValid = false
             } else {
                 errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             }
 
-            // Ensure a valid date is set
-            if (selectedDate.isNullOrEmpty()) {
-                selectedDate = BaseUtil.getFormattedDate()
+            if (chosenDate.isNullOrEmpty()) {
+                chosenDate = BaseUtil.getFormattedDate()
             }
 
-            // If valid, add a new history item
             if (isValid) {
-                val historyItem = HistoryItem(
-                    id = BaseUtil.generateCode(),
-                    name = selectedItem,
-                    pullRate = pullRate,
-                    pullRateColor = BaseUtil.chooseColor(pullRate),
-                    winDate = selectedDate
-                )
-                addNewItem(historyItem, historyItemsList)
-                dialog.dismiss()
+                historyItem.name = chosenItem
+                historyItem.winDate = chosenDate
+                historyItem.pullRate = chosenRate
+                historyItem.pullRateColor = chosenRate?.let { it1 -> BaseUtil.chooseColor(it1) }
+                historyItem.winDate = chosenDate
+                if(position == null)
+                    addNewItem(historyItem, historyItemsList)
+                else
+                    updateItem(position, historyItem, historyItemsList)
             }
+            dialog.dismiss();
         }
 
         dialog.show()
     }
 
 
-    private fun setUpSpinnerData(spinner: AutoCompleteTextView, onItemSelected: (String?) -> Unit) {
+
+
+    private fun setUpSpinnerData(spinner: AutoCompleteTextView, selectedItem:String?, onItemSelected: (String?) -> Unit) {
         val sortedItems = ArchiveCharacterData.ITEMS
             .map { it.name ?: "Unknown" }
             .sortedByDescending { it }
@@ -152,6 +165,7 @@ class HistoryFragment : Fragment() {
 
         spinner.setAdapter(adapter)
         spinner.threshold = 1
+        spinner.setText(selectedItem)
         spinner.setDropDownHeight(500)
 
         spinner.setOnClickListener {
@@ -165,14 +179,18 @@ class HistoryFragment : Fragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setUpWishRateData(view: View, onRateChanged: (Int) -> Unit) {
+    private fun setUpWishRateData(view: View, onRateChanged: (Int) -> Unit, rateValue: Int?) {
         val numberPicker: NumberPicker = view.findViewById(R.id.wish_rate_selector)
         val arrowDown: ImageButton = view.findViewById(R.id.number_arrow_down)
         val arrowUp: ImageButton = view.findViewById(R.id.number_arrow_up)
 
         numberPicker.minValue = 1
         numberPicker.maxValue = 90
-        numberPicker.value = 1
+        if (rateValue != null) {
+            numberPicker.value = rateValue
+        }else {
+            numberPicker.value = 1
+        }
 
         val delayMillis: Long = 120
         val handler = Handler(Looper.getMainLooper())
@@ -226,12 +244,27 @@ class HistoryFragment : Fragment() {
             true
         }
 
-        // Return the current value of the number picker
         onRateChanged(numberPicker.value)
     }
 
-    private fun setUpDatePicker(view: View, onDateSelected: (String?) -> Unit) {
+    private fun setUpDatePicker(view: View, selectedDate: String?, onDateSelected: (String?) -> Unit) {
         val dateInput: EditText = view.findViewById(R.id.win_date_selector)
+
+        // Set the initial date if selectedDate is not null or empty
+        if (!selectedDate.isNullOrEmpty()) {
+            dateInput.setText(selectedDate)
+        }
+
+        val datePickerDialog = DatePickerDialog(
+            view.context,
+            R.style.CustomDatePicker,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val newSelectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                dateInput.setText(newSelectedDate)
+                onDateSelected(newSelectedDate)
+            },
+            year, month, day
+        )
 
         dateInput.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -243,15 +276,16 @@ class HistoryFragment : Fragment() {
                 view.context,
                 R.style.CustomDatePicker,
                 { _, selectedYear, selectedMonth, selectedDay ->
-                    val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                    dateInput.setText(selectedDate)
-                    onDateSelected(selectedDate)
+                    val newSelectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                    dateInput.setText(newSelectedDate)
+                    onDateSelected(newSelectedDate)
                 },
                 year, month, day
             )
             datePickerDialog.show()
         }
     }
+
 
     private fun addNewItem(historyItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
         historyItemsList.add(historyItem)
