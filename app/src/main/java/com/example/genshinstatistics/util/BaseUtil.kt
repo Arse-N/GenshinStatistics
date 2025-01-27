@@ -1,7 +1,7 @@
 package com.example.genshinstatistics.util
 
+import android.content.Context
 import android.os.Build
-import android.view.View
 import androidx.annotation.RequiresApi
 import com.example.genshinstatistics.R
 import java.time.LocalDate
@@ -22,19 +22,17 @@ object BaseUtil {
         return code.toString()
     }
 
-    fun chooseColor(pullRate: Int): Int {
-        return if (pullRate <= 15) {
-            R.color.rarity_v1
-        } else if (pullRate in 16..30) {
-            R.color.rarity_v2
-        } else if (pullRate in 31..50) {
-            R.color.rarity_v3
-        } else if (pullRate in 51..69) {
-            R.color.rarity_v4
-        } else {
-            R.color.rarity_v5
+    fun chooseColor(context: Context, pullRate: Int): Int {
+        val colorResId = when {
+            pullRate <= 15 -> R.color.rarity_v1
+            pullRate in 16..30 -> R.color.rarity_v2
+            pullRate in 31..50 -> R.color.rarity_v3
+            pullRate in 51..69 -> R.color.rarity_v4
+            else -> R.color.rarity_v5
         }
+        return context.getColor(colorResId)
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getFormattedDate(): String {

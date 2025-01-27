@@ -140,7 +140,7 @@ class HistoryFragment : Fragment() {
                 historyItem.name = chosenItem
                 historyItem.winDate = chosenDate
                 historyItem.pullRate = chosenRate
-                historyItem.pullRateColor = chosenRate?.let { it1 -> BaseUtil.chooseColor(it1) }
+                historyItem.pullRateColor = chosenRate?.let { it1 -> BaseUtil.chooseColor(requireContext(), it1) }
                 historyItem.winDate = chosenDate
                 if(position == null)
                     addNewItem(historyItem, historyItemsList)
@@ -184,12 +184,17 @@ class HistoryFragment : Fragment() {
         val arrowDown: ImageButton = view.findViewById(R.id.number_arrow_down)
         val arrowUp: ImageButton = view.findViewById(R.id.number_arrow_up)
 
+        // Configure NumberPicker range
         numberPicker.minValue = 1
         numberPicker.maxValue = 90
-        if (rateValue != null) {
-            numberPicker.value = rateValue
-        }else {
-            numberPicker.value = 1
+
+        // Set initial value and notify callback
+        numberPicker.value = rateValue ?: 1
+        onRateChanged(numberPicker.value)
+
+        // Listen for manual value changes
+        numberPicker.setOnValueChangedListener { _, _, newVal ->
+            onRateChanged(newVal)
         }
 
         val delayMillis: Long = 120
@@ -217,12 +222,12 @@ class HistoryFragment : Fragment() {
             }
         }
 
+        // Handle increment button
         arrowUp.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     handler.post(incrementRunnable)
                 }
-
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     handler.removeCallbacks(incrementRunnable)
                 }
@@ -230,22 +235,20 @@ class HistoryFragment : Fragment() {
             true
         }
 
-
+        // Handle decrement button
         arrowDown.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     handler.post(decrementRunnable)
                 }
-
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     handler.removeCallbacks(decrementRunnable)
                 }
             }
             true
         }
-
-        onRateChanged(numberPicker.value)
     }
+
 
     private fun setUpDatePicker(view: View, selectedDate: String?, onDateSelected: (String?) -> Unit) {
         val dateInput: EditText = view.findViewById(R.id.win_date_selector)
