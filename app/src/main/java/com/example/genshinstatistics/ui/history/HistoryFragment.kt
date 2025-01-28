@@ -185,15 +185,12 @@ class HistoryFragment : Fragment() {
         val arrowDown: ImageButton = view.findViewById(R.id.number_arrow_down)
         val arrowUp: ImageButton = view.findViewById(R.id.number_arrow_up)
 
-        // Configure NumberPicker range
         numberPicker.minValue = 1
         numberPicker.maxValue = 90
 
-        // Set initial value and notify callback
         numberPicker.value = rateValue ?: 1
         onRateChanged(numberPicker.value)
 
-        // Listen for manual value changes
         numberPicker.setOnValueChangedListener { _, _, newVal ->
             onRateChanged(newVal)
         }
@@ -201,7 +198,6 @@ class HistoryFragment : Fragment() {
         val delayMillis: Long = 120
         val handler = Handler(Looper.getMainLooper())
 
-        // Runnable for incrementing the value
         val incrementRunnable = object : Runnable {
             override fun run() {
                 if (numberPicker.value < 90) {
@@ -212,7 +208,6 @@ class HistoryFragment : Fragment() {
             }
         }
 
-        // Runnable for decrementing the value
         val decrementRunnable = object : Runnable {
             override fun run() {
                 if (numberPicker.value > 1) {
@@ -223,7 +218,6 @@ class HistoryFragment : Fragment() {
             }
         }
 
-        // Handle increment button
         arrowUp.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -236,7 +230,6 @@ class HistoryFragment : Fragment() {
             true
         }
 
-        // Handle decrement button
         arrowDown.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
