@@ -2,12 +2,15 @@
     <string name="app_name">Genshin Statistics</string>
     <string name="title_home">Home</string>
     <string name="title_history">History</string>
-    <string name="charachter">Charachter</string>
+    <string name="charachter">Character</string>
     <string name="weapon">Weapon</string>
-    <string name="standart">Standart</string>
+    <string name="standart">Standard</string>
     <string name="add_item">Add Item</string>
     <string name="name">Name:</string>
     <string name="win_date">Win Date:</string>
     <string name="choose_date">Choose Date</string>
     <string name="search_item">Search Item</string>
+    <string name="the_item_will_be_removed_permanently">The Item will be removed permanently!</string>
+    <string name="are_you_sure_you_want_n_to_delete">Are you sure you want\n to delete?</string>
+    <string name="yes">Yes</string>
 </resources>

@@ -50,7 +50,10 @@ class HistoryFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
-                        removeItem(viewHolder.adapterPosition, historyItemsList);
+                        showRemoveItemDialog(
+                            historyItemsList,
+                            viewHolder.adapterPosition
+                        )
                     }
 
                     ItemTouchHelper.RIGHT -> {
@@ -116,6 +119,7 @@ class HistoryFragment : Fragment() {
             .setView(dialogView)
             .create()
 
+        dialog.setCanceledOnTouchOutside(false)
         dialogView.findViewById<View>(R.id.dialog_close).setOnClickListener {
             historyAdapter.notifyDataSetChanged()
             dialog.dismiss()
@@ -152,9 +156,6 @@ class HistoryFragment : Fragment() {
 
         dialog.show()
     }
-
-
-
 
     private fun setUpSpinnerData(spinner: AutoCompleteTextView, selectedItem:String?, onItemSelected: (String?) -> Unit) {
         val sortedItems = ArchiveCharacterData.ITEMS
@@ -249,7 +250,6 @@ class HistoryFragment : Fragment() {
         }
     }
 
-
     private fun setUpDatePicker(view: View, selectedDate: String?, onDateSelected: (String?) -> Unit) {
         val dateInput: EditText = view.findViewById(R.id.win_date_selector)
         val calendar = Calendar.getInstance()
@@ -288,8 +288,6 @@ class HistoryFragment : Fragment() {
         }
     }
 
-
-
     private fun addNewItem(historyItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
         historyItemsList.add(historyItem)
         historyAdapter.notifyItemInserted(historyItemsList.size - 1)
@@ -311,9 +309,39 @@ class HistoryFragment : Fragment() {
         JsonUtil.writeToJson(requireContext(), historyItemsList)
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged", "MissingInflatedId")
+    private fun showRemoveItemDialog(
+        historyItemsList: ArrayList<HistoryItem>,
+        position: Int
+    ) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.item_delete_dialog, null)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialogView.findViewById<View>(R.id.dialog_close).setOnClickListener {
+            historyAdapter.notifyDataSetChanged()
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
+            historyAdapter.notifyDataSetChanged()
+            removeItem(position, historyItemsList);
+            dialog.dismiss();
+        }
+
+        dialogView.findViewById<View>(R.id.no_button).setOnClickListener {
+            historyAdapter.notifyDataSetChanged()
+            dialog.dismiss();
+        }
+
+        dialog.show()
     }
 }

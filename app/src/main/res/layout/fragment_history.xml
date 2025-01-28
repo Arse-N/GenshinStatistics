@@ -64,6 +64,7 @@
                     android:background="@drawable/button_inactive"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
                     android:id="@+id/charachter_button"/>
             <TextView
                     android:text="@string/charachter"
@@ -80,7 +81,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/weapon_layout"
                 android:layout_marginStart="15dp"
-
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="10dp"
@@ -88,6 +88,7 @@
             <ImageButton
                     android:background="@drawable/button_active"
                     android:layout_width="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_height="30dp"
                     android:id="@+id/weapon_button"/>
             <TextView
@@ -113,6 +114,7 @@
                     android:background="@drawable/button_active"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
                     android:id="@+id/standart_button"/>
             <TextView
                     android:text="@string/standart"
