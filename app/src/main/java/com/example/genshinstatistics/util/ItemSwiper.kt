@@ -18,7 +18,7 @@ abstract class ItemSwiper(
     private val deleteColor = ContextCompat.getColor(context, R.color.pyro)
     private val editColor = ContextCompat.getColor(context, R.color.light_gold)
 
-    private val swipeLimitPx = 200f // Swipe limit in pixels
+    private val swipeLimitPx = 200f
 
     override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
         return swipeLimitPx / viewHolder.itemView.width
@@ -45,7 +45,10 @@ abstract class ItemSwiper(
             isAntiAlias = true
             style = Paint.Style.FILL
         }
-        val cornerRadius = 20f // Adjust as needed
+        val cornerRadius = 20f
+        val margin = 80
+        val iconScaleFactorEdit = 1.5f
+        val iconScaleFactorDelete = 1.2f
         val limitedDx = when {
             dX > swipeLimitPx -> swipeLimitPx
             dX < -swipeLimitPx -> -swipeLimitPx
@@ -69,12 +72,14 @@ abstract class ItemSwiper(
             c.drawPath(path, paint)
 
             editIcon?.let {
-                val iconMargin = (itemView.height - it.intrinsicHeight) / 2
+                val iconWidth = it.intrinsicWidth * iconScaleFactorEdit
+                val iconHeight = it.intrinsicHeight * iconScaleFactorEdit
+                val iconMargin = (itemView.height - iconHeight) / 2
                 val iconTop = itemView.top + iconMargin
-                val iconLeft = itemView.left + iconMargin
-                val iconRight = 50
-                val iconBottom = iconTop + it.intrinsicHeight
-                it.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                val iconLeft = itemView.left + margin
+                val iconRight = iconLeft + iconWidth
+                val iconBottom = iconTop + iconHeight
+                it.setBounds(iconLeft, iconTop.toInt(), iconRight.toInt(), iconBottom.toInt())
                 it.draw(c)
             }
         } else if (limitedDx < 0) { // Swipe to the left (delete)
@@ -94,18 +99,21 @@ abstract class ItemSwiper(
             c.drawPath(path, paint)
 
             deleteIcon?.let {
-                val iconMargin = (itemView.height - it.intrinsicHeight) / 2
+                val iconWidth = it.intrinsicWidth * iconScaleFactorDelete
+                val iconHeight = it.intrinsicHeight * iconScaleFactorDelete
+                val iconMargin = (itemView.height - iconHeight) / 2
                 val iconTop = itemView.top + iconMargin
-                val iconRight = itemView.right - iconMargin
-                val iconLeft = iconRight - it.intrinsicWidth
-                val iconBottom = iconTop + it.intrinsicHeight
-                it.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                val iconRight = itemView.right - margin
+                val iconLeft = iconRight - iconWidth
+                val iconBottom = iconTop + iconHeight
+                it.setBounds(iconLeft.toInt(), iconTop.toInt(), iconRight, iconBottom.toInt())
                 it.draw(c)
             }
         }
 
         super.onChildDraw(c, recyclerView, viewHolder, limitedDx, dY, actionState, isCurrentlyActive)
     }
+
 
 
 }

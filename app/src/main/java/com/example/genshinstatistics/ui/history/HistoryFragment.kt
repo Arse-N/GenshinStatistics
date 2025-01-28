@@ -50,7 +50,10 @@ class HistoryFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
-                        removeItem(viewHolder.adapterPosition, historyItemsList);
+                        showRemoveItemDialog(
+                            historyItemsList,
+                            viewHolder.adapterPosition
+                        )
                     }
 
                     ItemTouchHelper.RIGHT -> {
@@ -116,6 +119,7 @@ class HistoryFragment : Fragment() {
             .setView(dialogView)
             .create()
 
+        dialog.setCanceledOnTouchOutside(false)
         dialogView.findViewById<View>(R.id.dialog_close).setOnClickListener {
             historyAdapter.notifyDataSetChanged()
             dialog.dismiss()
@@ -153,9 +157,6 @@ class HistoryFragment : Fragment() {
         dialog.show()
     }
 
-
-
-
     private fun setUpSpinnerData(spinner: AutoCompleteTextView, selectedItem:String?, onItemSelected: (String?) -> Unit) {
         val sortedItems = ArchiveCharacterData.ITEMS
             .map { it.name ?: "Unknown" }
@@ -184,15 +185,12 @@ class HistoryFragment : Fragment() {
         val arrowDown: ImageButton = view.findViewById(R.id.number_arrow_down)
         val arrowUp: ImageButton = view.findViewById(R.id.number_arrow_up)
 
-        // Configure NumberPicker range
         numberPicker.minValue = 1
         numberPicker.maxValue = 90
 
-        // Set initial value and notify callback
         numberPicker.value = rateValue ?: 1
         onRateChanged(numberPicker.value)
 
-        // Listen for manual value changes
         numberPicker.setOnValueChangedListener { _, _, newVal ->
             onRateChanged(newVal)
         }
@@ -200,7 +198,6 @@ class HistoryFragment : Fragment() {
         val delayMillis: Long = 120
         val handler = Handler(Looper.getMainLooper())
 
-        // Runnable for incrementing the value
         val incrementRunnable = object : Runnable {
             override fun run() {
                 if (numberPicker.value < 90) {
@@ -211,7 +208,6 @@ class HistoryFragment : Fragment() {
             }
         }
 
-        // Runnable for decrementing the value
         val decrementRunnable = object : Runnable {
             override fun run() {
                 if (numberPicker.value > 1) {
@@ -222,7 +218,6 @@ class HistoryFragment : Fragment() {
             }
         }
 
-        // Handle increment button
         arrowUp.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -235,7 +230,6 @@ class HistoryFragment : Fragment() {
             true
         }
 
-        // Handle decrement button
         arrowDown.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -248,7 +242,6 @@ class HistoryFragment : Fragment() {
             true
         }
     }
-
 
     private fun setUpDatePicker(view: View, selectedDate: String?, onDateSelected: (String?) -> Unit) {
         val dateInput: EditText = view.findViewById(R.id.win_date_selector)
@@ -288,8 +281,6 @@ class HistoryFragment : Fragment() {
         }
     }
 
-
-
     private fun addNewItem(historyItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
         historyItemsList.add(historyItem)
         historyAdapter.notifyItemInserted(historyItemsList.size - 1)
@@ -311,9 +302,39 @@ class HistoryFragment : Fragment() {
         JsonUtil.writeToJson(requireContext(), historyItemsList)
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged", "MissingInflatedId")
+    private fun showRemoveItemDialog(
+        historyItemsList: ArrayList<HistoryItem>,
+        position: Int
+    ) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.item_delete_dialog, null)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialogView.findViewById<View>(R.id.dialog_close).setOnClickListener {
+            historyAdapter.notifyDataSetChanged()
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
+            historyAdapter.notifyDataSetChanged()
+            removeItem(position, historyItemsList);
+            dialog.dismiss();
+        }
+
+        dialogView.findViewById<View>(R.id.no_button).setOnClickListener {
+            historyAdapter.notifyDataSetChanged()
+            dialog.dismiss();
+        }
+
+        dialog.show()
     }
 }
