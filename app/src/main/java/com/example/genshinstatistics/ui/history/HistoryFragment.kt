@@ -128,7 +128,6 @@ class HistoryFragment : Fragment() {
         dialogView.findViewById<View>(R.id.dialog_done).setOnClickListener {
             var isValid = true
 
-            // Validate selected item
             if (chosenItem.isNullOrEmpty()) {
                 errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.rarity_v5))
                 isValid = false
@@ -150,8 +149,9 @@ class HistoryFragment : Fragment() {
                     addNewItem(historyItem, historyItemsList)
                 else
                     updateItem(position, historyItem, historyItemsList)
+                dialog.dismiss();
             }
-            dialog.dismiss();
+
         }
 
         dialog.show()
