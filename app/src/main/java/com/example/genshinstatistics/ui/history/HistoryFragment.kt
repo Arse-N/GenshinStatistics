@@ -167,8 +167,6 @@ class HistoryFragment : Fragment() {
         spinner.setAdapter(adapter)
         spinner.threshold = 1
         spinner.setText(selectedItem)
-        spinner.setDropDownHeight(500)
-
         spinner.setOnClickListener {
             spinner.showDropDown()
         }

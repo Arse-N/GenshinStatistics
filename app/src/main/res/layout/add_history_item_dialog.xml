@@ -97,7 +97,6 @@
                         android:inputType="text"
                         android:textSize="16sp"
                         style="@style/secondaryTextColor"
-                        android:dropDownHeight="200dp"
                         android:padding="10dp"
                         android:focusable="true"
                         android:clickable="true"
