@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -16,7 +17,6 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +24,7 @@ import com.example.genshinstatistics.R
 import com.example.genshinstatistics.adapters.HistoryItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.databinding.FragmentHistoryBinding
+import com.example.genshinstatistics.enum.WishType
 import com.example.genshinstatistics.model.HistoryItem
 import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
@@ -41,11 +42,12 @@ class HistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val historyViewModel = ViewModelProvider(this).get(HistoryViewModel::class.java)
+//        val historyViewModel = ViewModelProvider(this).get(HistoryViewModel::class.java)
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
 
         val historyItemsList: ArrayList<HistoryItem> = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
 
+        setupWishTypeSpinner(binding.wishTypeSelector);
         val itemSwiper = object : ItemSwiper(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when (direction) {
@@ -96,6 +98,46 @@ class HistoryFragment : Fragment() {
         }
 
     }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setupWishTypeSpinner(wishTypeSpinner: Spinner) {
+        val wishTypes = WishType.entries
+        val wishNames = wishTypes.map { it.displayName }
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, wishNames)
+        wishTypeSpinner.adapter = adapter
+
+        val arrowButton = view?.findViewById<ImageButton>(R.id.wish_type_arrow)
+
+        val toggleDropdown = {
+            val arrowDown = resources.getDrawable(R.drawable.ic_arrow_down, null)
+            val arrowUp = resources.getDrawable(R.drawable.ic_arrow_up, null)
+
+            if (arrowButton?.drawable == arrowDown) {
+                wishTypeSpinner.performClick()
+                arrowButton?.setImageDrawable(arrowUp)
+            } else {
+                wishTypeSpinner.performClick()
+                arrowButton?.setImageDrawable(arrowDown)
+            }
+        }
+
+        arrowButton?.setOnClickListener {
+            toggleDropdown()
+        }
+
+        wishTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedWish = wishTypes[position]
+                Log.d("SelectedWish", "Selected: ${selectedWish.name}")
+                arrowButton?.setImageDrawable(resources.getDrawable(R.drawable.ic_arrow_down, null))
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+
 
 
     @SuppressLint("NotifyDataSetChanged")

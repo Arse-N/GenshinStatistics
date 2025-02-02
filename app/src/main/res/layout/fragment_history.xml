@@ -47,25 +47,22 @@
                 android:layout_marginEnd="15dp"/>
     </LinearLayout>
     <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" android:id="@+id/linearLayout2">
-        <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/charachter_layout"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            android:id="@+id/linearLayout2">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="30dp"
+                android:id="@+id/wishtype_linearlayout"
                 android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="10dp"
-                android:layout_weight="1">
-            <ImageButton
-                    android:background="@drawable/button_inactive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal"
-                    android:id="@+id/charachter_button"/>
+                android:background="@drawable/filter_bg">
             <TextView
                     android:text="@string/charachter"
                     android:layout_width="wrap_content"
@@ -73,59 +70,47 @@
                     android:id="@+id/charachter_text"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    style="@style/secondaryTextColor"
-                    android:layout_gravity="center"/>
-        </FrameLayout>
-        <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/weapon_layout"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1">
-            <ImageButton
-                    android:background="@drawable/button_active"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_height="30dp"
-                    android:id="@+id/weapon_button"/>
-            <TextView
-                    android:text="@string/weapon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/weapon_text"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="25dp"
                     style="@style/primaryTextColor"
                     android:layout_gravity="center"/>
-        </FrameLayout>
-        <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/standart_layout"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"
-                android:translationZ="10dp"
-                android:layout_weight="1">
-            <ImageButton
-                    android:background="@drawable/button_active"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal"
-                    android:id="@+id/standart_button"/>
-            <TextView
-                    android:text="@string/standart"
-                    android:layout_width="wrap_content"
+            <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/standart_text"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    style="@style/primaryTextColor"
-                    android:layout_gravity="center"/>
-        </FrameLayout>
+                    android:orientation="horizontal"
+                    android:gravity="end">
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/spinner_bg"
+                        android:orientation="horizontal"
+                        android:gravity="end">
+                    <Spinner
+                            android:id="@+id/wish_type_selector"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingStart="50dp"
+                            android:paddingEnd="15dp"
+                            android:clickable="false"
+                            android:background="@android:color/transparent"
+                            android:popupBackground="@color/milk"
+                            android:popupTheme="@style/secondaryTextColor"
+                            android:spinnerMode="dropdown"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold">
+                    </Spinner>
+                    <ImageButton
+                            android:src="@drawable/ic_arrow_down"
+                            android:background="@android:color/transparent"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="10dp"
+                            android:id="@+id/wish_type_arrow"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/history_items"
