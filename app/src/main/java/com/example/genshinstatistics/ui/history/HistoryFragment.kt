@@ -152,11 +152,13 @@ class HistoryFragment : Fragment() {
         val errorText: TextView = dialogView.findViewById(R.id.item_selector_error)
         var chosenItem: String? = historyItem.name
         var chosenDate: String? = historyItem.winDate
-        var chosenRate: Int? = historyItem.pullRate
+        var chosenWishRate: Int? = historyItem.wishRate
+        var chosenWinRate: String? = historyItem.winRate
 
         setUpSpinnerData(spinner, chosenItem) { item -> chosenItem = item }
         setUpDatePicker(dialogView, chosenDate) { date -> chosenDate = date }
-        setUpWishRateData(dialogView, { rate -> chosenRate = rate }, chosenRate)
+        setUpWishRateData(dialogView, { rate -> chosenWishRate = rate }, chosenWishRate)
+        setUpWishRateData(dialogView, { rate -> chosenWishRate = rate }, chosenWishRate)
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
@@ -184,8 +186,8 @@ class HistoryFragment : Fragment() {
             if (isValid) {
                 historyItem.name = chosenItem
                 historyItem.winDate = chosenDate
-                historyItem.pullRate = chosenRate
-                historyItem.pullRateColor = chosenRate?.let { it1 -> BaseUtil.chooseColor(requireContext(), it1) }
+                historyItem.wishRate = chosenRate
+                historyItem.wishRateColor = chosenRate?.let { it1 -> BaseUtil.chooseColor(requireContext(), it1) }
                 historyItem.winDate = chosenDate
                 if(position == null)
                     addNewItem(historyItem, historyItemsList)
@@ -221,17 +223,18 @@ class HistoryFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpWishRateData(view: View, onRateChanged: (Int) -> Unit, rateValue: Int?) {
-        val numberPicker: NumberPicker = view.findViewById(R.id.wish_rate_selector)
+        val wishRatePicker: NumberPicker = view.findViewById(R.id.wish_rate_selector)
+        val winRate: NumberPicker = view.findViewById(R.id.win_rate_selector)
         val arrowDown: ImageButton = view.findViewById(R.id.number_arrow_down)
         val arrowUp: ImageButton = view.findViewById(R.id.number_arrow_up)
 
-        numberPicker.minValue = 1
-        numberPicker.maxValue = 90
+        wishRatePicker.minValue = 1
+        wishRatePicker.maxValue = 90
 
-        numberPicker.value = rateValue ?: 1
-        onRateChanged(numberPicker.value)
+        wishRatePicker.value = rateValue ?: 1
+        onRateChanged(wishRatePicker.value)
 
-        numberPicker.setOnValueChangedListener { _, _, newVal ->
+        wishRatePicker.setOnValueChangedListener { _, _, newVal ->
             onRateChanged(newVal)
         }
 
@@ -240,9 +243,9 @@ class HistoryFragment : Fragment() {
 
         val incrementRunnable = object : Runnable {
             override fun run() {
-                if (numberPicker.value < 90) {
-                    numberPicker.value++
-                    onRateChanged(numberPicker.value)
+                if (wishRatePicker.value < 90) {
+                    wishRatePicker.value++
+                    onRateChanged(wishRatePicker.value)
                     handler.postDelayed(this, delayMillis)
                 }
             }
@@ -250,9 +253,9 @@ class HistoryFragment : Fragment() {
 
         val decrementRunnable = object : Runnable {
             override fun run() {
-                if (numberPicker.value > 1) {
-                    numberPicker.value--
-                    onRateChanged(numberPicker.value)
+                if (wishRatePicker.value > 1) {
+                    wishRatePicker.value--
+                    onRateChanged(wishRatePicker.value)
                     handler.postDelayed(this, delayMillis)
                 }
             }

@@ -64,7 +64,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/filter_bg">
             <TextView
-                    android:text="@string/charachter"
+                    android:text="@string/wish_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/charachter_text"
@@ -72,7 +72,7 @@
                     android:textStyle="bold"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="25dp"
-                    style="@style/primaryTextColor"
+                    android:textColor="@color/very_light_gold"
                     android:layout_gravity="center"/>
             <LinearLayout
                     android:layout_width="match_parent"
@@ -80,16 +80,15 @@
                     android:orientation="horizontal"
                     android:gravity="end">
                 <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/spinner_bg"
-                        android:orientation="horizontal"
-                        android:gravity="end">
+                        android:orientation="horizontal">
                     <Spinner
                             android:id="@+id/wish_type_selector"
-                            android:layout_width="wrap_content"
+                            android:layout_width="175dp"
                             android:layout_height="match_parent"
-                            android:paddingStart="50dp"
+                            android:paddingStart="15dp"
                             android:paddingEnd="15dp"
                             android:clickable="false"
                             android:background="@android:color/transparent"
@@ -99,6 +98,12 @@
                             android:textColor="@android:color/black"
                             android:textStyle="bold">
                     </Spinner>
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/transparent"
+                            android:orientation="horizontal"
+                            android:gravity="end">
                     <ImageButton
                             android:src="@drawable/ic_arrow_down"
                             android:background="@android:color/transparent"
@@ -107,6 +112,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="10dp"
                             android:id="@+id/wish_type_arrow"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
@@ -120,5 +126,6 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="1.0"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
