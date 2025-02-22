@@ -22,12 +22,12 @@ object BaseUtil {
         return code.toString()
     }
 
-    fun chooseColor(context: Context, pullRate: Int): Int {
+    fun chooseColor(context: Context, wishRate: Int): Int {
         val colorResId = when {
-            pullRate <= 15 -> R.color.rarity_v1
-            pullRate in 16..30 -> R.color.rarity_v2
-            pullRate in 31..50 -> R.color.rarity_v3
-            pullRate in 51..69 -> R.color.rarity_v4
+            wishRate <= 15 -> R.color.rarity_v1
+            wishRate in 16..30 -> R.color.rarity_v2
+            wishRate in 31..50 -> R.color.rarity_v3
+            wishRate in 51..69 -> R.color.rarity_v4
             else -> R.color.rarity_v5
         }
         return context.getColor(colorResId)

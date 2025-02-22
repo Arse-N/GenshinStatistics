@@ -35,8 +35,9 @@ class HistoryItemAdapter(
             holder.nameTextView.text = historyItem.name
             holder.locationTextView.text = character.region?.name
             holder.birthDateTextView.text = character.birthdate
-            holder.pullRateTextView.text = historyItem.pullRate.toString()
+            holder.wishRateTextView.text = historyItem.wishRate.toString()
             holder.winDateTextView.text = historyItem.winDate
+            holder.winRateTextView.text = historyItem.winRate
 
             character.icon?.let {
                 holder.iconBgCardView.setBackgroundResource(it)
@@ -47,8 +48,8 @@ class HistoryItemAdapter(
             character.element?.let {
                 holder.signImageView.setBackgroundResource(it)
             }
-            historyItem.pullRateColor?.let {
-                holder.pullRateTextView.setTextColor(
+            historyItem.wishRateColor?.let {
+                holder.wishRateTextView.setTextColor(
                     it
                 )
             }
@@ -72,7 +73,8 @@ class HistoryItemAdapter(
         val iconBgCardView: LinearLayout = itemView.findViewById(R.id.color_card)
         val birthDateTextView: TextView = itemView.findViewById(R.id.birthdate_value)
         val locationTextView: TextView = itemView.findViewById(R.id.location_value)
-        val pullRateTextView: TextView = itemView.findViewById(R.id.number_value)
+        val wishRateTextView: TextView = itemView.findViewById(R.id.wish_rate_value)
+        val winRateTextView: TextView = itemView.findViewById(R.id.win_rate_value)
         val winDateTextView: TextView = itemView.findViewById(R.id.win_date_value)
     }
 

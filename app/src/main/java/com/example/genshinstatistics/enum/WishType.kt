@@ -1,10 +1,10 @@
 package com.example.genshinstatistics.enum
 
 enum class WishType(val displayName: String) {
-    CHARACTER_WISH("Character Wish"),
-    WEAPON_WISH("Weapon Wish"),
-    STANDARD_WISH("Standard Wish"),
-    CHRONICLED_WISH("Chronicled Wish"),
+    CHARACTER_WISH("Character"),
+    WEAPON_WISH("Weapon"),
+    STANDARD_WISH("Standard"),
+    CHRONICLED_WISH("Chronicled"),
     FREE("Free"),
     OTHER("Other")
 }

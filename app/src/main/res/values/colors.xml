@@ -5,6 +5,7 @@
     <color name="milk">#EAE6DD</color>
     <color name="gray">#8C9197</color>
     <color name="light_gold">#CEAB81</color>
+    <color name="very_light_gold">#F7EDCA</color>
 
 <!--    rarity-->
     <color name="rarity_v1">#678140</color>

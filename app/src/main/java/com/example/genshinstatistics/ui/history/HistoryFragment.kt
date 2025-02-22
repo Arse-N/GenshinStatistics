@@ -24,6 +24,7 @@ import com.example.genshinstatistics.R
 import com.example.genshinstatistics.adapters.HistoryItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.databinding.FragmentHistoryBinding
+import com.example.genshinstatistics.enum.WinRateType
 import com.example.genshinstatistics.enum.WishType
 import com.example.genshinstatistics.model.HistoryItem
 import com.example.genshinstatistics.util.BaseUtil
@@ -148,15 +149,25 @@ class HistoryFragment : Fragment() {
         position:Int?
     ) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.add_history_item_dialog, null)
-        val spinner: AutoCompleteTextView = dialogView.findViewById(R.id.item_selector)
+        val nameSpinner: AutoCompleteTextView = dialogView.findViewById(R.id.item_selector)
+        val wishTypeSpinner: Spinner = dialogView.findViewById(R.id.wish_type_selector)
+        val winRateSpinner: Spinner = dialogView.findViewById(R.id.win_rate_selector)
         val errorText: TextView = dialogView.findViewById(R.id.item_selector_error)
         var chosenItem: String? = historyItem.name
         var chosenDate: String? = historyItem.winDate
-        var chosenRate: Int? = historyItem.pullRate
+        var chosenWishRate: Int? = historyItem.wishRate
+        var chosenWinRate: String? = historyItem.winRate
+        var chosenWishType: String? = historyItem.wishType
 
-        setUpSpinnerData(spinner, chosenItem) { item -> chosenItem = item }
+        setUpCharacterData(nameSpinner, chosenItem) { item -> chosenItem = item }
         setUpDatePicker(dialogView, chosenDate) { date -> chosenDate = date }
-        setUpWishRateData(dialogView, { rate -> chosenRate = rate }, chosenRate)
+        setUpWishRateData(dialogView, { rate -> chosenWishRate = rate }, chosenWishRate)
+        setUpWinRateData(winRateSpinner, chosenWinRate) { selected ->
+            chosenWinRate = selected
+        }
+        setUpWishTypeData(wishTypeSpinner, chosenWishType) { selected ->
+            chosenWishType = selected
+        }
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
@@ -184,8 +195,9 @@ class HistoryFragment : Fragment() {
             if (isValid) {
                 historyItem.name = chosenItem
                 historyItem.winDate = chosenDate
-                historyItem.pullRate = chosenRate
-                historyItem.pullRateColor = chosenRate?.let { it1 -> BaseUtil.chooseColor(requireContext(), it1) }
+                historyItem.wishRate = chosenWishRate
+                historyItem.winRate = chosenWinRate
+                historyItem.wishRateColor = chosenWishRate?.let { it1 -> BaseUtil.chooseColor(requireContext(), it1) }
                 historyItem.winDate = chosenDate
                 if(position == null)
                     addNewItem(historyItem, historyItemsList)
@@ -199,7 +211,11 @@ class HistoryFragment : Fragment() {
         dialog.show()
     }
 
-    private fun setUpSpinnerData(spinner: AutoCompleteTextView, selectedItem:String?, onItemSelected: (String?) -> Unit) {
+    private fun setUpCharacterData(
+        spinner: AutoCompleteTextView,
+        selectedItem: String?,
+        onItemSelected: (String?) -> Unit
+    ) {
         val sortedItems = ArchiveCharacterData.ITEMS
             .map { it.name ?: "Unknown" }
             .sortedByDescending { it }
@@ -219,68 +235,138 @@ class HistoryFragment : Fragment() {
         }
     }
 
+    private fun setUpWishTypeData(
+        spinner: Spinner,
+        selectedItem: String?,
+        onItemSelected: (String?) -> Unit
+    ) {
+
+        val displayNames =  WishType.entries.map {
+            it.displayName
+        }
+
+        val adapter = ArrayAdapter(requireContext(), R.layout.custom_dropdown_item, displayNames)
+        spinner.adapter = adapter
+
+        selectedItem?.let {
+            val index = displayNames.indexOf(it)
+            if (index != -1) {
+                spinner.setSelection(index)
+            }
+        }
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedItem = displayNames[position]
+                onItemSelected(selectedItem)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                val selectedItem = displayNames[1]
+                onItemSelected(selectedItem)
+            }
+        }
+    }
+
+    private fun setUpWinRateData(
+        spinner: Spinner,
+        selectedItem: String?,
+        onItemSelected: (String?) -> Unit
+    ) {
+
+        val displayNames =  WinRateType.entries.map {
+            it.displayName
+        }
+
+        val adapter = ArrayAdapter(requireContext(), R.layout.custom_dropdown_item, displayNames)
+        spinner.adapter = adapter
+
+        selectedItem?.let {
+            val index = displayNames.indexOf(it)
+            if (index != -1) {
+                spinner.setSelection(index)
+            }
+        }
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedItem = displayNames[position]
+                onItemSelected(selectedItem)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                val selectedItem = displayNames[1]
+                onItemSelected(selectedItem)
+            }
+        }
+    }
+
+
+
+
+
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpWishRateData(view: View, onRateChanged: (Int) -> Unit, rateValue: Int?) {
-        val numberPicker: NumberPicker = view.findViewById(R.id.wish_rate_selector)
-        val arrowDown: ImageButton = view.findViewById(R.id.number_arrow_down)
-        val arrowUp: ImageButton = view.findViewById(R.id.number_arrow_up)
+        val wishRatePicker: NumberPicker = view.findViewById(R.id.wish_rate_selector)
+//        val arrowDown: ImageButton = view.findViewById(R.id.number_arrow_down)
+//        val arrowUp: ImageButton = view.findViewById(R.id.number_arrow_up)
 
-        numberPicker.minValue = 1
-        numberPicker.maxValue = 90
+        wishRatePicker.minValue = 1
+        wishRatePicker.maxValue = 90
 
-        numberPicker.value = rateValue ?: 1
-        onRateChanged(numberPicker.value)
+        wishRatePicker.value = rateValue ?: 1
+        onRateChanged(wishRatePicker.value)
 
-        numberPicker.setOnValueChangedListener { _, _, newVal ->
+        wishRatePicker.setOnValueChangedListener { _, _, newVal ->
             onRateChanged(newVal)
         }
+//
+//        val delayMillis: Long = 120
+//        val handler = Handler(Looper.getMainLooper())
+//
+//        val incrementRunnable = object : Runnable {
+//            override fun run() {
+//                if (wishRatePicker.value < 90) {
+//                    wishRatePicker.value++
+//                    onRateChanged(wishRatePicker.value)
+//                    handler.postDelayed(this, delayMillis)
+//                }
+//            }
+//        }
+//
+//        val decrementRunnable = object : Runnable {
+//            override fun run() {
+//                if (wishRatePicker.value > 1) {
+//                    wishRatePicker.value--
+//                    onRateChanged(wishRatePicker.value)
+//                    handler.postDelayed(this, delayMillis)
+//                }
+//            }
+//        }
 
-        val delayMillis: Long = 120
-        val handler = Handler(Looper.getMainLooper())
-
-        val incrementRunnable = object : Runnable {
-            override fun run() {
-                if (numberPicker.value < 90) {
-                    numberPicker.value++
-                    onRateChanged(numberPicker.value)
-                    handler.postDelayed(this, delayMillis)
-                }
-            }
-        }
-
-        val decrementRunnable = object : Runnable {
-            override fun run() {
-                if (numberPicker.value > 1) {
-                    numberPicker.value--
-                    onRateChanged(numberPicker.value)
-                    handler.postDelayed(this, delayMillis)
-                }
-            }
-        }
-
-        arrowUp.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    handler.post(incrementRunnable)
-                }
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    handler.removeCallbacks(incrementRunnable)
-                }
-            }
-            true
-        }
-
-        arrowDown.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    handler.post(decrementRunnable)
-                }
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    handler.removeCallbacks(decrementRunnable)
-                }
-            }
-            true
-        }
+//        arrowUp.setOnTouchListener { _, event ->
+//            when (event.action) {
+//                MotionEvent.ACTION_DOWN -> {
+//                    handler.post(incrementRunnable)
+//                }
+//                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+//                    handler.removeCallbacks(incrementRunnable)
+//                }
+//            }
+//            true
+//        }
+//
+//        arrowDown.setOnTouchListener { _, event ->
+//            when (event.action) {
+//                MotionEvent.ACTION_DOWN -> {
+//                    handler.post(decrementRunnable)
+//                }
+//                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+//                    handler.removeCallbacks(decrementRunnable)
+//                }
+//            }
+//            true
+//        }
     }
 
     private fun setUpDatePicker(view: View, selectedDate: String?, onDateSelected: (String?) -> Unit) {

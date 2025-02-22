@@ -122,6 +122,28 @@
                         android:layout_gravity="center"
                         android:ellipsize="end"
                         android:singleLine="true" />
+                <TextView
+                        android:id="@+id/slash"
+                        android:text=" | "
+                        android:layout_marginStart="5dp"
+                        style="@style/primaryTextColor"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                />
+                <TextView
+                        android:id="@+id/win_rate_value"
+                        android:text="50/50%"
+                        android:layout_marginStart="5dp"
+                        style="@style/primaryTextColor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:layout_gravity="center"
+                        android:ellipsize="end"
+                        android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>
 
@@ -142,7 +164,7 @@
                     android:layout_marginEnd="8dp">
 
                 <TextView
-                        android:id="@+id/number_value"
+                        android:id="@+id/wish_rate_value"
                         android:text="29"
                         android:layout_width="match_parent"
                         android:textAlignment="center"
