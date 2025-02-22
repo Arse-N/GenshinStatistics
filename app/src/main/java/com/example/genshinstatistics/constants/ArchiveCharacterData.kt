@@ -15,7 +15,7 @@ object ArchiveCharacterData {
                 region = Region.MONDSTADT,
                 iconBgColor = R.drawable.ic_geo_bg,
                 birthdate = "09/13",
-                element = R.drawable.ic_geo_bg,
+                element = R.drawable.ic_element_geo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -48,7 +48,7 @@ object ArchiveCharacterData {
                 region = Region.INAZUMA,
                 iconBgColor = R.drawable.ic_geo_bg,
                 birthdate = "06/01",
-                element = R.drawable.ic_geo_bg,
+                element = R.drawable.ic_element_geo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -81,7 +81,7 @@ object ArchiveCharacterData {
                 region = Region.NATLAN,
                 iconBgColor = R.drawable.ic_anemo_bg,
                 birthdate = "12/10",
-                element = R.drawable.ic_anemo_bg,
+                element = R.drawable.ic_element_anemo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -213,7 +213,7 @@ object ArchiveCharacterData {
                 region = Region.MONDSTADT,
                 iconBgColor = R.drawable.ic_anemo_bg,
                 birthdate = "03/14",
-                element = R.drawable.ic_anemo_bg,
+                element = R.drawable.ic_element_anemo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -224,7 +224,7 @@ object ArchiveCharacterData {
                 region = Region.INAZUMA,
                 iconBgColor = R.drawable.ic_anemo_bg,
                 birthdate = "10/29",
-                element = R.drawable.ic_anemo_bg,
+                element = R.drawable.ic_element_anemo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -334,7 +334,7 @@ object ArchiveCharacterData {
                 region = Region.FONTAINE,
                 iconBgColor = R.drawable.ic_geo_bg,
                 birthdate = "08/16",
-                element = R.drawable.ic_geo_bg,
+                element = R.drawable.ic_element_geo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -444,7 +444,7 @@ object ArchiveCharacterData {
                 region = Region.SUMERU,
                 iconBgColor = R.drawable.ic_anemo_bg,
                 birthdate = "11/18",
-                element = R.drawable.ic_anemo_bg,
+                element = R.drawable.ic_element_anemo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -466,7 +466,7 @@ object ArchiveCharacterData {
                 region = Region.LIYUE,
                 iconBgColor = R.drawable.ic_anemo_bg,
                 birthdate = "04/11",
-                element = R.drawable.ic_anemo_bg,
+                element = R.drawable.ic_element_anemo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -477,7 +477,7 @@ object ArchiveCharacterData {
                 region = Region.LIYUE,
                 iconBgColor = R.drawable.ic_anemo_bg,
                 birthdate = "04/17",
-                element = R.drawable.ic_anemo_bg,
+                element = R.drawable.ic_element_anemo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -488,7 +488,7 @@ object ArchiveCharacterData {
                 region = Region.NATLAN,
                 iconBgColor = R.drawable.ic_geo_bg,
                 birthdate = "03/13",
-                element = R.drawable.ic_geo_bg,
+                element = R.drawable.ic_element_geo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
@@ -532,7 +532,7 @@ object ArchiveCharacterData {
                 region = Region.LIYUE,
                 iconBgColor = R.drawable.ic_geo_bg,
                 birthdate = "12/31",
-                element = R.drawable.ic_geo_bg,
+                element = R.drawable.ic_element_geo,
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
