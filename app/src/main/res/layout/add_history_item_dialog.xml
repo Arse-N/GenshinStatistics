@@ -74,6 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
+                        android:layout_marginStart="10dp"
                         style="@style/primaryTextColor"
                         android:textStyle="bold"
                         android:textAlignment="center"
@@ -144,21 +145,17 @@
                         android:layout_marginBottom="13dp"
                         android:background="@color/black"
                         android:id="@+id/line_between_2"/>
-                <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="end">
                     <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:gravity="center">
                         <Spinner
                                 android:id="@+id/wish_type_selector"
-                                android:layout_width="175dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:paddingStart="15dp"
-                                android:paddingEnd="15dp"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="5dp"
                                 android:layout_marginEnd="10dp"
                                 android:clickable="false"
                                 android:background="@android:color/transparent"
@@ -168,37 +165,30 @@
                                 android:textColor="@android:color/black"
                                 android:textStyle="bold">
                         </Spinner>
-                        <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@android:color/transparent"
-                                android:orientation="horizontal"
-                                android:gravity="end">
-                            <ImageButton
-                                    android:src="@drawable/ic_arrow_down"
-                                    android:background="@android:color/transparent"
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:layout_gravity="center_vertical"
-                                    android:id="@+id/wish_type_arrow"/>
-                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
+
 
             </LinearLayout>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_marginTop="10dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
                     android:layout_height="wrap_content">
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="start"
+                        android:layout_weight="2">
             <LinearLayout
                     android:id="@+id/wish_rate_layout"
                     android:orientation="vertical"
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginStart="40dp">
+                    android:gravity="center_vertical">
                 <TextView
                         android:text="@string/wish_rate"
                         android:layout_width="wrap_content"
@@ -214,43 +204,36 @@
                 <LinearLayout
                         android:id="@+id/number_picker_layout"
                         android:orientation="horizontal"
-                        android:layout_width="120dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:background="@drawable/item_bg"
-                        android:gravity="center_vertical">
-                    <ImageButton
-                            android:src="@drawable/ic_arrow_down"
-                            android:background="@android:color/transparent"
-                            android:layout_width="40dp"
-                            android:layout_height="match_parent"
-                            android:id="@+id/number_arrow_down"/>
+                        android:gravity="center">
                     <android.widget.NumberPicker
                             android:id="@+id/wish_rate_selector"
-                            android:layout_width="0dp"
-                            android:layout_height="150dp"
+                            android:layout_width="50dp"
+                            android:layout_height="120dp"
                             android:textAlignment="center"
                             android:background="@android:color/transparent"
                             android:textSize="25sp"
                             android:padding="10dp"
-                            android:layout_weight="1"
                             android:value="1"/>
-                    <ImageButton
-                            android:src="@drawable/ic_arrow_up"
-                            android:background="@android:color/transparent"
-                            android:layout_width="40dp"
-                            android:layout_height="match_parent"
-                            android:id="@+id/number_arrow_up"/>
 
                 </LinearLayout>
             </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="end">
                 <LinearLayout
                         android:id="@+id/rate_layout"
                         android:orientation="vertical"
                         android:layout_width="120dp"
                         android:layout_marginTop="10dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginStart="70dp">
+                        android:gravity="center_vertical">
                     <TextView
                             android:text="@string/win_rate"
                             android:layout_width="wrap_content"
@@ -268,19 +251,13 @@
                             android:layout_width="120dp"
                             android:layout_height="40dp"
                             android:background="@drawable/item_bg"
-                            android:gravity="end">
-                        <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                            android:gravity="center">
                             <Spinner
                                     android:id="@+id/win_rate_selector"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:paddingStart="15dp"
-                                    android:paddingEnd="15dp"
-                                    android:layout_marginEnd="10dp"
-                                    android:clickable="false"
+                                    android:paddingStart="5dp"
+                                    android:paddingEnd="5dp"
                                     android:background="@android:color/transparent"
                                     android:popupBackground="@color/milk"
                                     android:popupTheme="@style/secondaryTextColor"
@@ -288,22 +265,8 @@
                                     android:textColor="@android:color/black"
                                     android:textStyle="bold">
                             </Spinner>
-                            <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@android:color/transparent"
-                                    android:orientation="horizontal"
-                                    android:gravity="end">
-                                <ImageButton
-                                        android:src="@drawable/ic_arrow_down"
-                                        android:background="@android:color/transparent"
-                                        android:layout_width="25dp"
-                                        android:layout_height="25dp"
-                                        android:layout_gravity="center_vertical"
-                                        android:id="@+id/wish_rate_arrow"/>
-                            </LinearLayout>
-                        </LinearLayout>
                     </LinearLayout>
+                </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -320,6 +283,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
+                        android:layout_marginStart="10dp"
                         style="@style/primaryTextColor"
                         android:textStyle="bold"
                         android:textAlignment="center"
