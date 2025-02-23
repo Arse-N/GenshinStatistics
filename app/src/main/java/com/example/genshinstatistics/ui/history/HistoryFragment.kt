@@ -296,10 +296,10 @@ class HistoryFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpWishRateData(view: View, onRateChanged: (Int) -> Unit, rateValue: Int?) {
         val wishRatePicker: NumberPicker = view.findViewById(R.id.wish_rate_selector)
-        wishRatePicker.minValue = 1
+        wishRatePicker.minValue = 0
         wishRatePicker.maxValue = 90
 
-        wishRatePicker.value = rateValue ?: 1
+        wishRatePicker.value = rateValue ?: 0
         onRateChanged(wishRatePicker.value)
 
         wishRatePicker.setOnValueChangedListener { _, _, newVal ->
