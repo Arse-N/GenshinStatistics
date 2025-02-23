@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.NonNull
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -19,7 +18,7 @@ import com.example.genshinstatistics.model.Character
 import com.example.genshinstatistics.model.HistoryItem
 
 class HistoryItemAdapter(
-    private val historyItemsList: ArrayList<HistoryItem>
+    private val historyItemsList: List<HistoryItem>
 ) : RecyclerView.Adapter<HistoryItemAdapter.ReminderViewHolder>() {
 
 
@@ -45,8 +44,6 @@ class HistoryItemAdapter(
                 character.icon?.let {
                     iconImageView.load(it) {
                         crossfade(true)
-//                        placeholder(R.drawable.placeholder)
-//                        error(R.drawable.error_image)
                         memoryCachePolicy(CachePolicy.ENABLED)
                         diskCachePolicy(CachePolicy.ENABLED)
                     }
