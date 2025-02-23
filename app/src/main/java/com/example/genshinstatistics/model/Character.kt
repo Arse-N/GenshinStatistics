@@ -4,7 +4,7 @@ import com.example.genshinstatistics.enum.ItemType
 
 data class Character(
     val id: Int? = null,
-    val icon: Int? = null,
+    val icon: String? = null,
     val iconBgColor: Int? = null,
     val name: String? = null,
     val element: Int? = null,

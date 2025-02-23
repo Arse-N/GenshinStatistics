@@ -11,6 +11,8 @@ import androidx.annotation.NonNull
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.request.CachePolicy
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.model.Character
@@ -30,35 +32,45 @@ class HistoryItemAdapter(
     @SuppressLint("RecyclerView")
     override fun onBindViewHolder(@NonNull holder: ReminderViewHolder, position: Int) {
         val historyItem: HistoryItem = historyItemsList[position]
-        val character: Character? = ArchiveCharacterData.ITEMS.find { ad -> ad.name == historyItem.name }
-        if (character != null) {
-            holder.nameTextView.text = historyItem.name
-            holder.locationTextView.text = character.region?.name
-            holder.birthDateTextView.text = character.birthdate
-            holder.wishRateTextView.text = historyItem.wishRate.toString()
-            holder.winDateTextView.text = historyItem.winDate
-            holder.winRateTextView.text = historyItem.winRate
+        val character: Character? = ArchiveCharacterData.ITEMS.find { it.name == historyItem.name }
 
-            character.icon?.let {
-                holder.iconBgCardView.setBackgroundResource(it)
-            }
-            character.iconBgColor?.let {
-                holder.iconBgCardView.setBackgroundResource(it)
-            }
-            character.element?.let {
-                holder.signImageView.setBackgroundResource(it)
-            }
-            historyItem.wishRateColor?.let {
-                holder.wishRateTextView.setTextColor(
-                    it
-                )
+        if (character != null) {
+            with(holder) {
+                nameTextView.text = historyItem.name
+                locationTextView.text = character.region?.name
+                birthDateTextView.text = character.birthdate
+                wishRateTextView.text = historyItem.wishRate.toString()
+                winDateTextView.text = historyItem.winDate
+                winRateTextView.text = historyItem.winRate
+                character.icon?.let {
+                    iconImageView.load(it) {
+                        crossfade(true)
+//                        placeholder(R.drawable.placeholder)
+//                        error(R.drawable.error_image)
+                        memoryCachePolicy(CachePolicy.ENABLED)
+                        diskCachePolicy(CachePolicy.ENABLED)
+                    }
+                }
+
+                character.iconBgColor?.let {
+                    iconBgCardView.setBackgroundResource(it)
+                }
+
+                character.element?.let {
+                    signImageView.setBackgroundResource(it)
+                }
+
+                historyItem.wishRateColor?.let {
+                    wishRateTextView.setTextColor(it)
+                }
             }
         }
-        val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-        params.bottomMargin = if (position == itemCount - 1) 150 else 0
-        holder.itemView.layoutParams = params
 
+        holder.itemView.layoutParams = (holder.itemView.layoutParams as RecyclerView.LayoutParams).apply {
+            bottomMargin = if (position == itemCount - 1) 150 else 0
+        }
     }
+
 
     override fun getItemCount(): Int {
         return historyItemsList.size
