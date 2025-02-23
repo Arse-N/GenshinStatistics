@@ -27,6 +27,7 @@ import com.example.genshinstatistics.model.HistoryItem
 import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
 import com.example.genshinstatistics.util.SorterUtil
+import okhttp3.internal.notifyAll
 import java.util.*
 
 class HistoryFragment : Fragment() {
@@ -34,6 +35,10 @@ class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private lateinit var historyAdapter: HistoryItemAdapter
+
+    private lateinit var historyItemsList: ArrayList<HistoryItem>
+    private lateinit var filteredHistoryItemsList: ArrayList<HistoryItem>
+    private lateinit var selectedWishType: String
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -43,24 +48,20 @@ class HistoryFragment : Fragment() {
     ): View {
 //        val historyViewModel = ViewModelProvider(this).get(HistoryViewModel::class.java)
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
-
-        var historyItemsList: ArrayList<HistoryItem> = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
-//        historyItemsList = SorterUtil.sortAndFilter(historyItemsList);
-        setupWishTypeSpinner(binding.wishTypeSelector, historyItemsList);
+        historyItemsList = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
+        setupWishTypeSpinner(binding.wishTypeSelector);
         val itemSwiper = object : ItemSwiper(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
                         showRemoveItemDialog(
-                            historyItemsList,
                             viewHolder.adapterPosition
                         )
                     }
 
                     ItemTouchHelper.RIGHT -> {
-                        val historyItem: HistoryItem = historyItemsList.get(viewHolder.adapterPosition)
+                        val historyItem: HistoryItem = filteredHistoryItemsList.get(viewHolder.adapterPosition)
                         showItemDialog(
-                            historyItemsList,
                             historyItem,
                             viewHolder.adapterPosition
                         )
@@ -73,14 +74,12 @@ class HistoryFragment : Fragment() {
 
         binding.addButton.setOnClickListener {
             showItemDialog(
-                historyItemsList,
                 HistoryItem(
                     id = BaseUtil.generateCode(),
                 ),
                 null
             )
         }
-//        setupRecyclerView(historyItemsList)
         val itemTouchHelper = ItemTouchHelper(itemSwiper)
         itemTouchHelper.attachToRecyclerView(binding.historyItems)
 
@@ -98,7 +97,9 @@ class HistoryFragment : Fragment() {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun setupWishTypeSpinner(wishTypeSpinner: Spinner, historyItemsList: ArrayList<HistoryItem>) {
+    private fun setupWishTypeSpinner(
+        wishTypeSpinner: Spinner
+    ) {
         val wishTypes = WishType.entries
         val wishNames = wishTypes.map { it.displayName }
 
@@ -114,10 +115,10 @@ class HistoryFragment : Fragment() {
         wishTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             @SuppressLint("NotifyDataSetChanged")
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedWishType: String = wishTypes[position].displayName
+                selectedWishType = wishTypes[position].displayName
 
-                val newHistoryItemsList: ArrayList<HistoryItem> = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
-                setupRecyclerView(newHistoryItemsList)
+                filteredHistoryItemsList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
+                setupRecyclerView(filteredHistoryItemsList)
                 historyAdapter.notifyDataSetChanged()
 
                 arrowButton?.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_down))
@@ -127,10 +128,10 @@ class HistoryFragment : Fragment() {
         }
     }
 
+
     @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showItemDialog(
-        historyItemsList: ArrayList<HistoryItem>,
         historyItem: HistoryItem,
         position:Int?
     ) {
@@ -187,9 +188,9 @@ class HistoryFragment : Fragment() {
                 historyItem.winDate = chosenDate
                 historyItem.wishType = chosenWishType
                 if(position == null)
-                    addNewItem(historyItem, historyItemsList)
+                    addNewItem(historyItem)
                 else
-                    updateItem(position, historyItem, historyItemsList)
+                    updateItem(position, historyItem)
                 dialog.dismiss();
             }
 
@@ -338,8 +339,9 @@ class HistoryFragment : Fragment() {
         }
     }
 
-    private fun addNewItem(historyItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
+    private fun addNewItem(historyItem: HistoryItem) {
         historyItemsList.add(historyItem)
+        filteredHistoryItemsList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
         historyAdapter.notifyItemInserted(historyItemsList.size - 1)
         JsonUtil.writeToJson(requireContext(), historyItemsList)
         if (historyItemsList.size > 1) {
@@ -347,17 +349,32 @@ class HistoryFragment : Fragment() {
         }
     }
 
-    private fun updateItem(position: Int, newHistoryItem: HistoryItem, historyItemsList: ArrayList<HistoryItem>) {
-        historyItemsList[position] = newHistoryItem;
-        historyAdapter.notifyItemChanged(position)
-        JsonUtil.writeToJson(requireContext(), historyItemsList)
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateItem(
+        position: Int,
+        newHistoryItem: HistoryItem
+    ) {
+        val newPosition = historyItemsList.indexOf(filteredHistoryItemsList[position])
+        if (newPosition != -1) {
+            historyItemsList[newPosition] = newHistoryItem
+            filteredHistoryItemsList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
+            historyAdapter.notifyDataSetChanged()
+            JsonUtil.writeToJson(requireContext(), historyItemsList)
+        }
     }
 
-    private fun removeItem(position: Int, historyItemsList: ArrayList<HistoryItem>) {
-        historyItemsList.removeAt(position)
-        historyAdapter.notifyItemRemoved(position)
-        JsonUtil.writeToJson(requireContext(), historyItemsList)
+    private fun removeItem(
+        position: Int
+    ) {
+        val newPosition = historyItemsList.indexOf(filteredHistoryItemsList[position])
+        if (newPosition != -1) {
+            historyItemsList.removeAt(newPosition)
+            filteredHistoryItemsList.removeAt(position)
+            historyAdapter.notifyItemRemoved(position)
+            JsonUtil.writeToJson(requireContext(), historyItemsList)
+        }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -367,7 +384,6 @@ class HistoryFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged", "MissingInflatedId")
     private fun showRemoveItemDialog(
-        historyItemsList: ArrayList<HistoryItem>,
         position: Int
     ) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.item_delete_dialog, null)
@@ -383,7 +399,7 @@ class HistoryFragment : Fragment() {
 
         dialogView.findViewById<View>(R.id.yes_button).setOnClickListener {
             historyAdapter.notifyDataSetChanged()
-            removeItem(position, historyItemsList);
+            removeItem(position);
             dialog.dismiss();
         }
 
