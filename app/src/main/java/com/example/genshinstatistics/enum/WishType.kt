@@ -5,7 +5,7 @@ enum class WishType(val displayName: String) {
     CHARACTER_WISH("Character"),
     WEAPON_WISH("Weapon"),
     STANDARD_WISH("Standard"),
-    CHRONICLED_WISH("Chronical"),
+    CHRONICAL_WISH("Chronical"),
     FREE("Free"),
     OTHER("Other")
 }
