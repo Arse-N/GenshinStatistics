@@ -199,6 +199,7 @@ class HistoryFragment : Fragment() {
                 historyItem.winRate = chosenWinRate
                 historyItem.wishRateColor = chosenWishRate?.let { it1 -> BaseUtil.chooseColor(requireContext(), it1) }
                 historyItem.winDate = chosenDate
+                historyItem.wishType = chosenWishType
                 if(position == null)
                     addNewItem(historyItem, historyItemsList)
                 else
