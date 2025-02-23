@@ -339,15 +339,26 @@ class HistoryFragment : Fragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun addNewItem(historyItem: HistoryItem) {
         historyItemsList.add(historyItem)
-        filteredHistoryItemsList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
-        historyAdapter.notifyItemInserted(historyItemsList.size - 1)
+        val newFilteredList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
+        val newIndex = newFilteredList.indexOf(historyItem)
+        filteredHistoryItemsList.clear()
+        filteredHistoryItemsList.addAll(newFilteredList)
+
+        if (newIndex != -1) {
+            historyAdapter.notifyItemInserted(newIndex)
+        } else {
+            historyAdapter.notifyDataSetChanged()
+        }
+
         JsonUtil.writeToJson(requireContext(), historyItemsList)
-        if (historyItemsList.size > 1) {
-            historyAdapter.notifyItemChanged(historyItemsList.size - 2)
+        if (filteredHistoryItemsList.size > 1) {
+            historyAdapter.notifyItemChanged(filteredHistoryItemsList.size - 2)
         }
     }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateItem(
