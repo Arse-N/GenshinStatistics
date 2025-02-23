@@ -361,18 +361,27 @@ class HistoryFragment : Fragment() {
 
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun updateItem(
-        position: Int,
-        newHistoryItem: HistoryItem
-    ) {
-        val newPosition = historyItemsList.indexOf(filteredHistoryItemsList[position])
+    private fun updateItem(position: Int, newHistoryItem: HistoryItem) {
+        val originalItem = filteredHistoryItemsList.getOrNull(position) ?: return
+        val newPosition = historyItemsList.indexOf(originalItem)
+
         if (newPosition != -1) {
             historyItemsList[newPosition] = newHistoryItem
-            filteredHistoryItemsList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
-            historyAdapter.notifyDataSetChanged()
+            val newFilteredList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
+            val updatedIndex = newFilteredList.indexOf(newHistoryItem)
+            filteredHistoryItemsList.clear()
+            filteredHistoryItemsList.addAll(newFilteredList)
+
+            if (updatedIndex != -1) {
+                historyAdapter.notifyItemChanged(updatedIndex)
+            } else {
+                historyAdapter.notifyDataSetChanged()
+            }
+
             JsonUtil.writeToJson(requireContext(), historyItemsList)
         }
     }
+
 
     private fun removeItem(
         position: Int
