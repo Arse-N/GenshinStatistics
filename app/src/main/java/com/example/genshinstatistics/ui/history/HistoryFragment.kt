@@ -6,11 +6,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -24,11 +20,13 @@ import com.example.genshinstatistics.R
 import com.example.genshinstatistics.adapters.HistoryItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.databinding.FragmentHistoryBinding
+import com.example.genshinstatistics.enum.SortType
 import com.example.genshinstatistics.enum.WinRateType
 import com.example.genshinstatistics.enum.WishType
 import com.example.genshinstatistics.model.HistoryItem
 import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
+import com.example.genshinstatistics.util.SorterUtil
 import java.util.*
 
 class HistoryFragment : Fragment() {
@@ -46,9 +44,9 @@ class HistoryFragment : Fragment() {
 //        val historyViewModel = ViewModelProvider(this).get(HistoryViewModel::class.java)
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
 
-        val historyItemsList: ArrayList<HistoryItem> = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
-
-        setupWishTypeSpinner(binding.wishTypeSelector);
+        var historyItemsList: ArrayList<HistoryItem> = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
+//        historyItemsList = SorterUtil.sortAndFilter(historyItemsList);
+        setupWishTypeSpinner(binding.wishTypeSelector, historyItemsList);
         val itemSwiper = object : ItemSwiper(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when (direction) {
@@ -82,15 +80,14 @@ class HistoryFragment : Fragment() {
                 null
             )
         }
-        setupRecyclerView(historyItemsList)
-
+//        setupRecyclerView(historyItemsList)
         val itemTouchHelper = ItemTouchHelper(itemSwiper)
         itemTouchHelper.attachToRecyclerView(binding.historyItems)
 
         return binding.root
     }
 
-    private fun setupRecyclerView(historyItemsList: ArrayList<HistoryItem>) {
+    private fun setupRecyclerView(historyItemsList: List<HistoryItem>) {
         historyAdapter = HistoryItemAdapter(historyItemsList)
 
         binding.historyItems.apply {
@@ -101,7 +98,7 @@ class HistoryFragment : Fragment() {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun setupWishTypeSpinner(wishTypeSpinner: Spinner) {
+    private fun setupWishTypeSpinner(wishTypeSpinner: Spinner, historyItemsList: ArrayList<HistoryItem>) {
         val wishTypes = WishType.entries
         val wishNames = wishTypes.map { it.displayName }
 
@@ -110,36 +107,25 @@ class HistoryFragment : Fragment() {
 
         val arrowButton = view?.findViewById<ImageButton>(R.id.wish_type_arrow)
 
-        val toggleDropdown = {
-            val arrowDown = resources.getDrawable(R.drawable.ic_arrow_down, null)
-            val arrowUp = resources.getDrawable(R.drawable.ic_arrow_up, null)
-
-            if (arrowButton?.drawable == arrowDown) {
-                wishTypeSpinner.performClick()
-                arrowButton?.setImageDrawable(arrowUp)
-            } else {
-                wishTypeSpinner.performClick()
-                arrowButton?.setImageDrawable(arrowDown)
-            }
-        }
-
         arrowButton?.setOnClickListener {
-            toggleDropdown()
+            wishTypeSpinner.performClick()
         }
 
         wishTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            @SuppressLint("NotifyDataSetChanged")
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedWish = wishTypes[position]
-                Log.d("SelectedWish", "Selected: ${selectedWish.name}")
-                arrowButton?.setImageDrawable(resources.getDrawable(R.drawable.ic_arrow_down, null))
+                val selectedWishType: String = wishTypes[position].displayName
+
+                val newHistoryItemsList: ArrayList<HistoryItem> = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
+                setupRecyclerView(newHistoryItemsList)
+                historyAdapter.notifyDataSetChanged()
+
+                arrowButton?.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_down))
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
-
-
-
 
     @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -309,9 +295,6 @@ class HistoryFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpWishRateData(view: View, onRateChanged: (Int) -> Unit, rateValue: Int?) {
         val wishRatePicker: NumberPicker = view.findViewById(R.id.wish_rate_selector)
-//        val arrowDown: ImageButton = view.findViewById(R.id.number_arrow_down)
-//        val arrowUp: ImageButton = view.findViewById(R.id.number_arrow_up)
-
         wishRatePicker.minValue = 1
         wishRatePicker.maxValue = 90
 
@@ -321,65 +304,15 @@ class HistoryFragment : Fragment() {
         wishRatePicker.setOnValueChangedListener { _, _, newVal ->
             onRateChanged(newVal)
         }
-//
-//        val delayMillis: Long = 120
-//        val handler = Handler(Looper.getMainLooper())
-//
-//        val incrementRunnable = object : Runnable {
-//            override fun run() {
-//                if (wishRatePicker.value < 90) {
-//                    wishRatePicker.value++
-//                    onRateChanged(wishRatePicker.value)
-//                    handler.postDelayed(this, delayMillis)
-//                }
-//            }
-//        }
-//
-//        val decrementRunnable = object : Runnable {
-//            override fun run() {
-//                if (wishRatePicker.value > 1) {
-//                    wishRatePicker.value--
-//                    onRateChanged(wishRatePicker.value)
-//                    handler.postDelayed(this, delayMillis)
-//                }
-//            }
-//        }
-
-//        arrowUp.setOnTouchListener { _, event ->
-//            when (event.action) {
-//                MotionEvent.ACTION_DOWN -> {
-//                    handler.post(incrementRunnable)
-//                }
-//                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-//                    handler.removeCallbacks(incrementRunnable)
-//                }
-//            }
-//            true
-//        }
-//
-//        arrowDown.setOnTouchListener { _, event ->
-//            when (event.action) {
-//                MotionEvent.ACTION_DOWN -> {
-//                    handler.post(decrementRunnable)
-//                }
-//                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-//                    handler.removeCallbacks(decrementRunnable)
-//                }
-//            }
-//            true
-//        }
     }
 
     private fun setUpDatePicker(view: View, selectedDate: String?, onDateSelected: (String?) -> Unit) {
         val dateInput: EditText = view.findViewById(R.id.win_date_selector)
         val calendar = Calendar.getInstance()
-
-        // Set initial values for year, month, and day
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get(Calendar.MONTH)
         val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
 
-        // Set the input field to the selected date or today's date
         if (!selectedDate.isNullOrEmpty()) {
             dateInput.setText(selectedDate)
         } else {
@@ -387,7 +320,6 @@ class HistoryFragment : Fragment() {
             dateInput.setText(todayDate)
         }
 
-        // Create DatePickerDialog
         val datePickerDialog = DatePickerDialog(
             view.context,
             R.style.CustomDatePicker,
@@ -399,10 +331,8 @@ class HistoryFragment : Fragment() {
             currentYear, currentMonth, currentDay
         )
 
-        // Disable future dates
         datePickerDialog.datePicker.maxDate = calendar.timeInMillis
 
-        // Open the DatePickerDialog on input click
         dateInput.setOnClickListener {
             datePickerDialog.show()
         }
