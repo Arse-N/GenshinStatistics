@@ -12,6 +12,12 @@
             tools:layout="@layout/fragment_home"/>
 
     <fragment
+            android:id="@+id/navigation_statistic"
+            android:name="com.example.genshinstatistics.ui.home.StatisticFragment"
+            android:label="@string/statistic"
+            tools:layout="@layout/fragment_statistic"/>
+
+    <fragment
             android:id="@+id/navigation_history"
             android:name="com.example.genshinstatistics.ui.history.HistoryFragment"
             android:label="@string/title_history"

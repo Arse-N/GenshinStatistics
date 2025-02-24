@@ -7,6 +7,11 @@
             android:title="@string/title_home"/>
 
     <item
+            android:id="@+id/navigation_statistic"
+            android:icon="@drawable/ic_home"
+            android:title="@string/statistic"/>
+
+    <item
             android:id="@+id/navigation_history"
             android:icon="@drawable/ic_history"
             android:title="@string/title_history"/>
