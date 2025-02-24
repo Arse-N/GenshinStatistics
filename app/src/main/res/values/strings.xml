@@ -2,9 +2,9 @@
     <string name="app_name">Genshin Statistics</string>
     <string name="title_home">Home</string>
     <string name="title_history">History</string>
-    <string name="charachter">Character</string>
+    <string name="character">Character</string>
     <string name="weapon">Weapon</string>
-    <string name="standart">Standard</string>
+    <string name="standard">Standard</string>
     <string name="add_item">Add Item</string>
     <string name="name">Name</string>
     <string name="win_date">Win Date</string>
@@ -17,4 +17,6 @@
     <string name="please_select_item">Please select item!</string>
     <string name="win_rate">Win Rate</string>
     <string name="wish_rate">Wish Rate</string>
+    <string name="statistic">Statistic</string>
+    <string name="filter_by">Filter by</string>
 </resources>
