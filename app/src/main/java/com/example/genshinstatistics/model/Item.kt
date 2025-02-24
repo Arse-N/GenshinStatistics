@@ -1,6 +1,7 @@
 package com.example.genshinstatistics.model
 
-import com.example.genshinstatistics.enum.ItemType
+import com.example.genshinstatistics.enums.ItemType
+import com.example.genshinstatistics.enums.Region
 
 data class Character(
     val id: Int? = null,
