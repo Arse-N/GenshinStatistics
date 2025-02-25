@@ -1,12 +1,9 @@
 package com.example.genshinstatistics.enums
 
-enum class Region(val displayName: String) {
-    MONDSTADT("Mondstadt"),
-    LIYUE("Liyue"),
-    INAZUMA("Inazuma"),
-    SUMERU("Sumeru"),
-    FONTAINE("Fontaine"),
-    NATLAN("Natlan"),
-    SNEZHNAYA("Snezhnaya"),
-    UNKNOWN("Unknown")
+enum class WeaponType(val displayName: String) {
+    BOW("Bow"),
+    CATALYST("Catalyst"),
+    CLAYMORE("Claymore"),
+    POLEARM("Polearm"),
+    SWORD("Sword")
 }

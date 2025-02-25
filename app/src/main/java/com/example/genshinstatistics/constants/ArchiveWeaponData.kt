@@ -2,624 +2,616 @@ package com.example.genshinstatistics.constants
 
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.enums.ItemType
-import com.example.genshinstatistics.model.Character
-import com.example.genshinstatistics.enums.Region
+import com.example.genshinstatistics.enums.WeaponType
+import com.example.genshinstatistics.model.Item
 
-object ArchiveCharacterData {
-    val ITEMS: List<Character> by lazy {
+object ArchiveWeaponData {
+    val Weapons: List<Item> by lazy {
         listOf(
-            // 5-Star Characters
-            Character(
+            Item(
                 id = 1,
-                name = "Albedo",
-                region = Region.MONDSTADT,
-                iconBgColor = R.drawable.ic_geo_bg,
+                name = "Thundering Pulse",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
                 icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
-                birthdate = "09/13",
-                element = R.drawable.ic_element_geo,
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 2,
-                name = "Alhaitham",
-                region = Region.SUMERU,
-                iconBgColor = R.drawable.ic_dendro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-alhatham.png",
-                birthdate = "09/26",
-                element = R.drawable.ic_element_dendro,
+                name = "Astral Vulture's Crimson Plumage",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 3,
-                name = "Aloy",
-                region = Region.UNKNOWN,
-                iconBgColor = R.drawable.ic_cryo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-aloy.png",
-                birthdate = "02/06",
-                element = R.drawable.ic_element_cryo,
+                name = "Elegy for the End",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 4,
-                name = "Arataki Itto",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_geo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-itto.png",
-                birthdate = "06/01",
-                element = R.drawable.ic_element_geo,
+                name = "Silvershower Heartstrings",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 5,
-                name = "Arlecchino",
-                region = Region.SNEZHNAYA,
-                iconBgColor = R.drawable.ic_pyro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-arlecchino.png",
-                birthdate = "08/22",
-                element = R.drawable.ic_element_pyro,
+                name = "Polar Star",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 6,
-                name = "Baizhu",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_dendro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-baizhu.png",
-                birthdate = "04/25",
-                element = R.drawable.ic_element_dendro,
+                name = "The First Great Magic",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 7,
-                name = "Chasca",
-                region = Region.NATLAN,
-                iconBgColor = R.drawable.ic_anemo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_chasca.png",
-                birthdate = "12/10",
-                element = R.drawable.ic_element_anemo,
+                name = "Amos' Bow",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 8,
-                name = "Chiori",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_geo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_chiori.png",
-                birthdate = "08/17",
-                element = R.drawable.ic_element_geo,
+                name = "Skyward Harp",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 9,
-                name = "Citlali",
-                region = Region.NATLAN,
-                iconBgColor = R.drawable.ic_cryo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_citlali.png",
-                birthdate = "01/20",
-                element = R.drawable.ic_element_cryo,
+                name = "Aqua Simulacra",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 10,
-                name = "Clorinde",
-                region = Region.FONTAINE,
-                iconBgColor = R.drawable.ic_electro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_clorinde.png",
-                birthdate = "09/20",
-                element = R.drawable.ic_element_electro,
+                name = "Hunter's Path",
+                weaponType = WeaponType.BOW,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_bow,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 11,
-                name = "Cyno",
-                region = Region.SUMERU,
-                iconBgColor = R.drawable.ic_electro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-cyno.png",
-                birthdate = "07/23",
-                element = R.drawable.ic_element_electro,
+                name = "Cashflow Supervision",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 12,
-                name = "Dehya",
-                region = Region.SUMERU,
-                iconBgColor = R.drawable.ic_pyro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-dehya.png",
-                birthdate = "04/25",
-                element = R.drawable.ic_element_pyro,
+                name = "Everlasting Moonglow",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 13,
-                name = "Diluc",
-                region = Region.MONDSTADT,
-                iconBgColor = R.drawable.ic_pyro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-diluc.png",
-                birthdate = "04/30",
-                element = R.drawable.ic_element_pyro,
+                name = "Kagura's Verity",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 14,
-                name = "Emilie",
-                region = Region.FONTAINE,
-                iconBgColor = R.drawable.ic_dendro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_emilie.png",
-                birthdate = "09/28",
-                element = R.drawable.ic_element_dendro,
+                name = "A Thousand Floating Dreams",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 15,
-                name = "Eula",
-                region = Region.MONDSTADT,
-                iconBgColor = R.drawable.ic_cryo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-eula.png",
-                birthdate = "10/25",
-                element = R.drawable.ic_element_cryo,
+                name = "Memory of Dust",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 16,
-                name = "Furina",
-                region = Region.FONTAINE,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-furina.png",
-                birthdate = "10/13",
-                element = R.drawable.ic_element_hydro,
+                name = "Tulaytullah's Remembrance",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 17,
-                name = "Ganyu",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_cryo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-ganyu.png",
-                birthdate = "12/02",
-                element = R.drawable.ic_element_cryo,
+                name = "Jadefall's Splendor",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 18,
-                name = "Hu Tao",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_pyro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-hutao.png",
-                birthdate = "07/15",
-                element = R.drawable.ic_element_pyro,
+                name = "Lost Prayer to the Sacred Winds",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 19,
-                name = "Jean",
-                region = Region.MONDSTADT,
-                iconBgColor = R.drawable.ic_anemo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-jean.png",
-                birthdate = "03/14",
-                element = R.drawable.ic_element_anemo,
+                name = "Skyward Atlas",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 20,
-                name = "Kaedehara Kazuha",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_anemo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-kazuha.png",
-                birthdate = "10/29",
-                element = R.drawable.ic_element_anemo,
+                name = "Tome of the Eternal Flow",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 21,
-                name = "Kamisato Ayaka",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_cryo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-ayaka.png",
-                birthdate = "09/28",
-                element = R.drawable.ic_element_cryo,
+                name = "Crane's Echoing Call",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 22,
-                name = "Kamisato Ayato",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_ayaka.png",
-                birthdate = "03/26",
-                element = R.drawable.ic_element_hydro,
+                name = "Surf's Up",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 23,
-                name = "Keqing",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_electro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-keqing.png",
-                birthdate = "11/20",
-                element = R.drawable.ic_element_electro,
+                name = "Starcaller's Watch",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 24,
-                name = "Kinich",
-                region = Region.NATLAN,
-                iconBgColor = R.drawable.ic_dendro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_kinich.png",
-                birthdate = "11/11",
-                element = R.drawable.ic_element_dendro,
+                name = "Sunny Morning Sleep-In",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-albedo.png",
+                itemTypeIcon = R.drawable.ic_catalyst,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 25,
-                name = "Klee",
-                region = Region.MONDSTADT,
-                iconBgColor = R.drawable.ic_pyro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-klee.png",
-                birthdate = "07/27",
-                element = R.drawable.ic_element_pyro,
+                name = "Splendor of Tranquil Waters",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/splendor_of_tranquil_waters.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 26,
-                name = "Lyney",
-                region = Region.FONTAINE,
-                iconBgColor = R.drawable.ic_pyro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-liney.png",
-                birthdate = "02/02",
-                element = R.drawable.ic_element_pyro,
+                name = "Key of Khaj-Nisut",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/key_of_khaj_nisut.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 27,
-                name = "Mona",
-                region = Region.MONDSTADT,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-mona.png",
-                birthdate = "08/31",
-                element = R.drawable.ic_element_hydro,
+                name = "Light of Foliar Incision",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/light_of_foliar_incision.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 28,
-                name = "Mualani",
-                region = Region.NATLAN,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_mualani.png",
-                birthdate = "08/03",
-                element = R.drawable.ic_element_hydro,
+                name = "Skyward Blade",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/skyward_blade.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 29,
-                name = "Nahida",
-                region = Region.SUMERU,
-                iconBgColor = R.drawable.ic_dendro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-nahida.png",
-                birthdate = "06/27",
-                element = R.drawable.ic_element_dendro,
+                name = "Aquila Favonia",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/aquila_favonia.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 30,
-                name = "Navia",
-                region = Region.FONTAINE,
-                iconBgColor = R.drawable.ic_geo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_navia.png",
-                birthdate = "08/16",
-                element = R.drawable.ic_element_geo,
+                name = "Summit Shaper",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/summit_shaper.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 31,
-                name = "Neuvillette",
-                region = Region.FONTAINE,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-neuvillette.png",
-                birthdate = "12/18",
-                element = R.drawable.ic_element_hydro,
+                name = "Primordial Jade Cutter",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/primordial_jade_cutter.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 32,
-                name = "Nilou",
-                region = Region.SUMERU,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-nilou.png",
-                birthdate = "12/03",
-                element = R.drawable.ic_element_hydro,
+                name = "Haran Geppaku Futsu",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/haran_geppaku_futsu.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 33,
-                name = "Qiqi",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_cryo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-qiqi.png",
-                birthdate = "03/03",
-                element = R.drawable.ic_element_cryo,
+                name = "Uraku Misugiri",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/uraku_misugiri.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 34,
-                name = "Raiden Shogun",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_electro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-raiden.png",
-                birthdate = "06/26",
-                element = R.drawable.ic_element_electro,
+                name = "Absolution",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/absolution.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 35,
-                name = "Sangonomiya Kokomi",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-kokomi.png",
-                birthdate = "02/22",
-                element = R.drawable.ic_element_hydro,
+                name = "Freedom-Sworn",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/freedom_sworn.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 36,
-                name = "Shenhe",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_cryo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-shenhe.png",
-                birthdate = "03/10",
-                element = R.drawable.ic_element_cryo,
+                name = "Peak Patrol Song",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/peak_patrol_song.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 37,
-                name = "Sigewinne",
-                region = Region.FONTAINE,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_sigewinne.png",
-                birthdate = "03/30",
-                element = R.drawable.ic_element_hydro,
+                name = "Mistsplitter Reforged",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/mistsplitter_reforged.png",
+                itemTypeIcon = R.drawable.ic_sword,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 38,
-                name = "Tartaglia",
-                region = Region.SNEZHNAYA,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-tartaglia.png",
-                birthdate = "07/20",
-                element = R.drawable.ic_element_hydro,
+                name = "A Thousand Blazing Suns",
+                weaponType = WeaponType.CLAYMORE,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/a_thousand_blazing_suns.png",
+                itemTypeIcon = R.drawable.ic_claymore,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 39,
-                name = "Tighnari",
-                region = Region.SUMERU,
-                iconBgColor = R.drawable.ic_dendro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-tighnari.png",
-                birthdate = "09/21",
-                element = R.drawable.ic_element_dendro,
+                name = "Song of Broken Pines",
+                weaponType = WeaponType.CLAYMORE,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/song_of_broken_pines.png",
+                itemTypeIcon = R.drawable.ic_claymore,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 40,
-                name = "Wanderer",
-                region = Region.SUMERU,
-                iconBgColor = R.drawable.ic_anemo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-wanderer.png",
-                birthdate = "11/18",
-                element = R.drawable.ic_element_anemo,
+                name = "The Unforged",
+                weaponType = WeaponType.CLAYMORE,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/the_unforged.png",
+                itemTypeIcon = R.drawable.ic_claymore,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 41,
-                name = "Wriothesley",
-                region = Region.FONTAINE,
-                iconBgColor = R.drawable.ic_cryo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-wriothesley.png",
-                birthdate = "11/23",
-                element = R.drawable.ic_element_cryo,
+                name = "Redhorn Stonethresher",
+                weaponType = WeaponType.CLAYMORE,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/redhorn_stonethresher.png",
+                itemTypeIcon = R.drawable.ic_claymore,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 42,
-                name = "Xianyun",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_anemo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_xianyun.png",
-                birthdate = "04/11",
-                element = R.drawable.ic_element_anemo,
+                name = "Beacon of the Reed Sea",
+                weaponType = WeaponType.CLAYMORE,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/beacon_of_the_reed_sea.png",
+                itemTypeIcon = R.drawable.ic_claymore,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 43,
-                name = "Xiao",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_anemo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-xiao.png",
-                birthdate = "04/17",
-                element = R.drawable.ic_element_anemo,
+                name = "Wolf's Gravestone",
+                weaponType = WeaponType.CLAYMORE,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/wolfs_gravestone.png",
+                itemTypeIcon = R.drawable.ic_claymore,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 44,
-                name = "Xilonen",
-                region = Region.NATLAN,
-                iconBgColor = R.drawable.ic_geo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_xilonen.png",
-                birthdate = "03/13",
-                element = R.drawable.ic_element_geo,
+                name = "Skyward Pride",
+                weaponType = WeaponType.CLAYMORE,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/skyward_pride.png",
+                itemTypeIcon = R.drawable.ic_claymore,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 45,
-                name = "Yae Miko",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_electro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-yaemiko.png",
-                birthdate = "06/27",
-                element = R.drawable.ic_element_electro,
+                name = "Verdict",
+                weaponType = WeaponType.CLAYMORE,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/verdict.png",
+                itemTypeIcon = R.drawable.ic_claymore,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 46,
-                name = "Yelan",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_hydro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-yelan.png",
-                birthdate = "07/20",
-                element = R.drawable.ic_element_hydro,
+                name = "Fang of the Mountain King",
+                weaponType = WeaponType.CLAYMORE,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/fang_of_the_mountain_king.png",
+                itemTypeIcon = R.drawable.ic_claymore,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 47,
-                name = "Yoimiya",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_pyro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-yoimiya.png",
-                birthdate = "06/21",
-                element = R.drawable.ic_element_pyro,
+                name = "Engulfing Lightning",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/engulfing_lightning.png",
+                itemTypeIcon = R.drawable.ic_polearm,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 48,
-                name = "Zhongli",
-                region = Region.LIYUE,
-                iconBgColor = R.drawable.ic_geo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-zhongli.png",
-                birthdate = "12/31",
-                element = R.drawable.ic_element_geo,
+                name = "Lumidouce Elegy",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/lumidouce_elegy.png",
+                itemTypeIcon = R.drawable.ic_polearm,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 49,
-                name = "Mavuika",
-                region = Region.NATLAN,
-                iconBgColor = R.drawable.ic_pyro_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_mavuika.png",
-                birthdate = "08/28",
-                element = R.drawable.ic_element_pyro,
+                name = "Crimson Moon's Semblance",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/crimson_moons_semblance.png",
+                itemTypeIcon = R.drawable.ic_polearm,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 50,
-                name = "Venti",
-                region = Region.MONDSTADT,
-                iconBgColor = R.drawable.ic_anemo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic-venti.png",
-                birthdate = "06/16",
-                element = R.drawable.ic_element_anemo,
+                name = "Skyward Spine",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/skyward_spine.png",
+                itemTypeIcon = R.drawable.ic_polearm,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
             ),
-            Character(
+            Item(
                 id = 51,
-                name = "Yumemizuki Mizuki",
-                region = Region.INAZUMA,
-                iconBgColor = R.drawable.ic_anemo_bg,
-                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_mizuki.png",
-                birthdate = "03/16",
-                element = R.drawable.ic_element_anemo,
+                name = "Primordial Jade Winged-Spear",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/primordial_jade_winged_spear.png",
+                itemTypeIcon = R.drawable.ic_polearm,
                 rarity = 5,
                 rank = 0,
-                type = ItemType.CHARACTER
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 52,
+                name = "Staff of Homa",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/staff_of_homa.png",
+                itemTypeIcon = R.drawable.ic_polearm,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 53,
+                name = "Calamity Queller",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/calamity_queller.png",
+                itemTypeIcon = R.drawable.ic_polearm,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 54,
+                name = "Vortex Vanquisher",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/vortex_vanquisher.png",
+                itemTypeIcon = R.drawable.ic_polearm,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 55,
+                name = "Staff of the Scarlet Sands",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/staff_of_the_scarlet_sands.png",
+                itemTypeIcon = R.drawable.ic_polearm,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
             )
         )
     }

@@ -19,15 +19,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.adapters.HistoryItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
+import com.example.genshinstatistics.constants.ArchiveWeaponData
 import com.example.genshinstatistics.databinding.FragmentHistoryBinding
-import com.example.genshinstatistics.enum.SortType
-import com.example.genshinstatistics.enum.WinRateType
-import com.example.genshinstatistics.enum.WishType
+import com.example.genshinstatistics.enums.SortType
+import com.example.genshinstatistics.enums.WinRateType
+import com.example.genshinstatistics.enums.WishType
 import com.example.genshinstatistics.model.HistoryItem
 import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
 import com.example.genshinstatistics.util.SorterUtil
-import okhttp3.internal.notifyAll
 import java.util.*
 
 class HistoryFragment : Fragment() {
@@ -204,7 +204,8 @@ class HistoryFragment : Fragment() {
         selectedItem: String?,
         onItemSelected: (String?) -> Unit
     ) {
-        val sortedItems = ArchiveCharacterData.ITEMS
+
+        val sortedItems = (ArchiveCharacterData.Characthers + ArchiveWeaponData.Weapons)
             .map { it.name ?: "Unknown" }
             .sortedByDescending { it }
 
