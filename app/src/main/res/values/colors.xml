@@ -23,7 +23,7 @@
     <color name="hydro">#4275DB</color>
     <color name="dendro">#92FC00</color>
 
-<!--charachter rarity-->
+<!--character rarity-->
     <color name="epic">#9273AB</color>
-    <color name="legendar">#B87A31</color>
+    <color name="legendary">#B87A31</color>
 </resources>

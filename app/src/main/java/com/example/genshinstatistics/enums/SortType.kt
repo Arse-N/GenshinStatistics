@@ -1,4 +1,4 @@
-package com.example.genshinstatistics.enum
+package com.example.genshinstatistics.enums
 
 enum class SortType {
     WISH_TYPE,

@@ -1,4 +1,4 @@
-package com.example.genshinstatistics.model
+package com.example.genshinstatistics.enums
 
 enum class Region(val displayName: String) {
     MONDSTADT("Mondstadt"),

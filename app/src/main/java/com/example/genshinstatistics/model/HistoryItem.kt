@@ -1,8 +1,5 @@
 package com.example.genshinstatistics.model
 
-import com.example.genshinstatistics.enum.WinRateType
-import com.example.genshinstatistics.enum.WishType
-
 data class HistoryItem(
     var id: String? = null,
     var name: String? = null,

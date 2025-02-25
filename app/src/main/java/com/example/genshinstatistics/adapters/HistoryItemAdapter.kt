@@ -14,8 +14,9 @@ import coil.load
 import coil.request.CachePolicy
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.constants.ArchiveCharacterData
-import com.example.genshinstatistics.model.Character
+import com.example.genshinstatistics.constants.ArchiveWeaponData
 import com.example.genshinstatistics.model.HistoryItem
+import com.example.genshinstatistics.model.Item
 
 class HistoryItemAdapter(
     private val historyItemsList: List<HistoryItem>
@@ -31,17 +32,18 @@ class HistoryItemAdapter(
     @SuppressLint("RecyclerView")
     override fun onBindViewHolder(@NonNull holder: ReminderViewHolder, position: Int) {
         val historyItem: HistoryItem = historyItemsList[position]
-        val character: Character? = ArchiveCharacterData.ITEMS.find { it.name == historyItem.name }
+        val items = (ArchiveCharacterData.Characthers + ArchiveWeaponData.Weapons)
+        val item: Item? = items.find { it.name == historyItem.name }
 
-        if (character != null) {
+        if (item != null) {
             with(holder) {
                 nameTextView.text = historyItem.name
-                locationTextView.text = character.region?.name
-                birthDateTextView.text = character.birthdate
+                locationTextView.text = item.region?.displayName?: item.weaponType?.displayName
+                birthDateTextView.text = item.birthdate?: ""
                 wishRateTextView.text = historyItem.wishRate.toString()
                 winDateTextView.text = historyItem.winDate
                 winRateTextView.text = historyItem.winRate
-                character.icon?.let {
+                item.icon?.let {
                     iconImageView.load(it) {
                         crossfade(true)
                         memoryCachePolicy(CachePolicy.ENABLED)
@@ -49,11 +51,11 @@ class HistoryItemAdapter(
                     }
                 }
 
-                character.iconBgColor?.let {
+                item.iconBgColor?.let {
                     iconBgCardView.setBackgroundResource(it)
                 }
 
-                character.element?.let {
+                item.itemTypeIcon?.let {
                     signImageView.setBackgroundResource(it)
                 }
 

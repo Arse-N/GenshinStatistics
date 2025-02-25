@@ -1,7 +1,7 @@
 package com.example.genshinstatistics.util
 
-import com.example.genshinstatistics.enum.SortType
-import com.example.genshinstatistics.enum.WishType
+import com.example.genshinstatistics.enums.SortType
+import com.example.genshinstatistics.enums.WishType
 import com.example.genshinstatistics.model.HistoryItem
 
 object SorterUtil {
