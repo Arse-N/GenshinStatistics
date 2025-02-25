@@ -15,6 +15,7 @@ import coil.request.CachePolicy
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.constants.ArchiveWeaponData
+import com.example.genshinstatistics.enums.ItemType
 import com.example.genshinstatistics.model.HistoryItem
 import com.example.genshinstatistics.model.Item
 
@@ -37,9 +38,22 @@ class HistoryItemAdapter(
 
         if (item != null) {
             with(holder) {
+                if (item.type == ItemType.WEAPON) {
+                    locationLine.visibility = View.GONE
+                    item.itemTypeIcon?.let {
+                        birthDateIcon.setBackgroundResource(it)
+                    }
+                    nameTextView.setSingleLine(false)
+                    birthDateTextView.text = item.weaponType?.displayName
+                } else {
+                    locationLine.visibility = View.VISIBLE
+                    birthDateIcon.setBackgroundResource(R.drawable.ic_date)
+                    nameTextView.setSingleLine(true)
+                    birthDateTextView.text = item.birthdate
+                }
                 nameTextView.text = historyItem.name
-                locationTextView.text = item.region?.displayName?: item.weaponType?.displayName
-                birthDateTextView.text = item.birthdate?: ""
+                locationTextView.text = item.region?.displayName
+
                 wishRateTextView.text = historyItem.wishRate.toString()
                 winDateTextView.text = historyItem.winDate
                 winRateTextView.text = historyItem.winRate
@@ -87,6 +101,8 @@ class HistoryItemAdapter(
         val wishRateTextView: TextView = itemView.findViewById(R.id.wish_rate_value)
         val winRateTextView: TextView = itemView.findViewById(R.id.win_rate_value)
         val winDateTextView: TextView = itemView.findViewById(R.id.win_date_value)
+        val locationLine: LinearLayout = itemView.findViewById(R.id.linearLayout3)
+        val birthDateIcon: ImageView = itemView.findViewById(R.id.date_icon)
     }
 
 }

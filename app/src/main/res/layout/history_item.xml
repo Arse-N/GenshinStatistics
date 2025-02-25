@@ -76,6 +76,7 @@
                         android:id="@+id/location_icon"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="7dp"
                         app:srcCompat="@drawable/ic_location" />
 
@@ -108,8 +109,7 @@
                         android:id="@+id/date_icon"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:layout_marginStart="7dp"
-                        app:srcCompat="@drawable/ic_date" />
+                        android:layout_marginStart="7dp" />
 
                 <TextView
                         android:id="@+id/birthdate_value"
