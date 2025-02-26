@@ -1,6 +1,10 @@
 package com.example.genshinstatistics.adapters
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.BackgroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
@@ -20,7 +25,9 @@ import com.example.genshinstatistics.model.HistoryItem
 import com.example.genshinstatistics.model.Item
 
 class HistoryItemAdapter(
-    private val historyItemsList: List<HistoryItem>
+    private val context: Context,
+    private var historyItemsList: List<HistoryItem>,
+    private var searchText: String = ""
 ) : RecyclerView.Adapter<HistoryItemAdapter.ReminderViewHolder>() {
 
 
@@ -52,6 +59,7 @@ class HistoryItemAdapter(
                     birthDateTextView.text = item.birthdate
                 }
                 nameTextView.text = historyItem.name
+                nameTextView.text = getHighlightedText(historyItem.name, searchText)
                 locationTextView.text = item.region?.displayName
 
                 wishRateTextView.text = historyItem.wishRate.toString()
@@ -87,6 +95,49 @@ class HistoryItemAdapter(
 
     override fun getItemCount(): Int {
         return historyItemsList.size
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(newList: List<HistoryItem>) {
+        historyItemsList = newList
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateSearchList(newList: List<HistoryItem>, query: String) {
+        historyItemsList = newList
+        searchText = query
+        notifyDataSetChanged()
+    }
+
+
+    private fun getHighlightedText(fullText: String, searchText: String): SpannableString {
+        val spannable = SpannableString(fullText)
+        val startIndex = fullText.lowercase().indexOf(searchText.lowercase())
+
+        if (startIndex >= 0) {
+            val highlightColor = ContextCompat.getColor(context, R.color.light_gold)
+
+            spannable.setSpan(
+                BackgroundColorSpan(highlightColor),
+                startIndex,
+                startIndex + searchText.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+//            spannable.setSpan(
+//                ForegroundColorSpan(Color.RED),
+//                startIndex,
+//                startIndex + searchText.length,
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+//            )
+//            spannable.setSpan(
+//                StyleSpan(Typeface.BOLD),
+//                startIndex,
+//                startIndex + searchText.length,
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+//            )
+        }
+        return spannable
     }
 
     class ReminderViewHolder(@NonNull itemView: View) : RecyclerView.ViewHolder(itemView) {
