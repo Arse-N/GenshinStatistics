@@ -75,7 +75,7 @@ class HistoryFragment : Fragment() {
                     }
 
                 }
-
+                historyAdapter.notifyItemChanged(viewHolder.adapterPosition)
             }
         }
 
