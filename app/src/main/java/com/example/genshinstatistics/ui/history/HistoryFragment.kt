@@ -36,7 +36,6 @@ class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private lateinit var historyAdapter: HistoryItemAdapter
-
     private lateinit var historyItemsList: ArrayList<HistoryItem>
     private lateinit var filteredHistoryItemsList: ArrayList<HistoryItem>
     private lateinit var searchedHistoryItemsList: ArrayList<HistoryItem>
@@ -54,6 +53,8 @@ class HistoryFragment : Fragment() {
         historyItemsList = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
         historySearchBar = binding.historySearchBar
         historySearchBar.clearFocus()
+        filteredHistoryItemsList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, WishType.CHARACTER_WISH.displayName)
+        setupRecyclerView(filteredHistoryItemsList)
         setupWishTypeSpinner(binding.wishTypeSelector);
         setUpHistorySearchBar(historySearchBar)
         val itemSwiper = object : ItemSwiper(requireContext()) {
