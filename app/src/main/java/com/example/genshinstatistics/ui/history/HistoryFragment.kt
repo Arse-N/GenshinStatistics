@@ -4,11 +4,15 @@ import ItemSwiper
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -17,6 +21,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.genshinstatistics.R
+import com.example.genshinstatistics.adapters.HistoryFilterAdapter
 import com.example.genshinstatistics.adapters.HistoryItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.constants.ArchiveWeaponData
@@ -41,6 +46,7 @@ class HistoryFragment : Fragment() {
     private lateinit var searchedHistoryItemsList: ArrayList<HistoryItem>
     private lateinit var selectedWishType: String
     private lateinit var historySearchBar: SearchView
+    private var popupWindow: PopupWindow? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -86,6 +92,10 @@ class HistoryFragment : Fragment() {
                 ),
                 null
             )
+        }
+
+        binding.filterButton.setOnClickListener {
+            showPopup { filter, isAscending -> true }
         }
         val itemTouchHelper = ItemTouchHelper(itemSwiper)
         itemTouchHelper.attachToRecyclerView(binding.historyItems)
@@ -440,6 +450,34 @@ class HistoryFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun showPopup(onFilterSelected: (String, Boolean) -> Unit) {
+        val filterOptions = SortType.entries.drop(1).map { it.displayName }
+        if (popupWindow == null) {
+            val inflater = LayoutInflater.from(context)
+            val view = inflater.inflate(R.layout.history_filter_pop_up, null)
+            val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewFilters)
+
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            val adapter = HistoryFilterAdapter(filterOptions) { index, isAscending ->
+                onFilterSelected(filterOptions[index], isAscending)
+                popupWindow?.dismiss()
+            }
+            recyclerView.adapter = adapter
+
+            popupWindow = PopupWindow(
+                view,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                true
+            )
+            popupWindow?.elevation = 10f
+            popupWindow?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        }
+
+        popupWindow?.showAsDropDown(binding.filterButton, 0, 10)
+    }
+
 
 
     @SuppressLint("NotifyDataSetChanged", "MissingInflatedId")

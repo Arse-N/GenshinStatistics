@@ -22,10 +22,12 @@ object SorterUtil {
         val sortedList = when (sortBy) {
             SortType.WISH_TYPE -> filteredList.sortedBy { it.wishType }
             SortType.WIN_DATE -> filteredList.sortedBy { BaseUtil.parseDate(it.winDate) }
-            SortType.ELEMENT -> TODO()
+            SortType.NAME -> filteredList.sortedBy { it.name }
+            SortType.WISH_RATE -> filteredList.sortedBy { it.wishRate }
             null -> filteredList
         }
 //        val finalSortedList = sortedList.sortedBy { BaseUtil.parseDate(it.winDate) }
         return if (ascending) ArrayList(sortedList) else ArrayList(sortedList.reversed())
     }
+
 }
