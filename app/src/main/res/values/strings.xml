@@ -19,4 +19,5 @@
     <string name="wish_rate">Wish Rate</string>
     <string name="statistic">Statistic</string>
     <string name="filter_by">Filter by</string>
+    <string name="apply_filter">Apply Filter</string>
 </resources>

@@ -4,11 +4,15 @@ import ItemSwiper
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -17,6 +21,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.genshinstatistics.R
+import com.example.genshinstatistics.adapters.HistoryFilterAdapter
 import com.example.genshinstatistics.adapters.HistoryItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.constants.ArchiveWeaponData
@@ -29,7 +34,6 @@ import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
 import com.example.genshinstatistics.util.SorterUtil
 import java.util.*
-import kotlin.collections.ArrayList
 
 class HistoryFragment : Fragment() {
 
@@ -41,6 +45,7 @@ class HistoryFragment : Fragment() {
     private lateinit var searchedHistoryItemsList: ArrayList<HistoryItem>
     private lateinit var selectedWishType: String
     private lateinit var historySearchBar: SearchView
+    private var popupWindow: PopupWindow? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -53,7 +58,8 @@ class HistoryFragment : Fragment() {
         historyItemsList = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
         historySearchBar = binding.historySearchBar
         historySearchBar.clearFocus()
-        filteredHistoryItemsList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, WishType.CHARACTER_WISH.displayName)
+        filteredHistoryItemsList =
+            SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, false, WishType.CHARACTER_WISH.displayName)
         setupRecyclerView(filteredHistoryItemsList)
         setupWishTypeSpinner(binding.wishTypeSelector);
         setUpHistorySearchBar(historySearchBar)
@@ -86,6 +92,10 @@ class HistoryFragment : Fragment() {
                 ),
                 null
             )
+        }
+
+        binding.filterButton.setOnClickListener {
+            showPopup()
         }
         val itemTouchHelper = ItemTouchHelper(itemSwiper)
         itemTouchHelper.attachToRecyclerView(binding.historyItems)
@@ -124,7 +134,8 @@ class HistoryFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedWishType = wishTypes[position].displayName
 
-                filteredHistoryItemsList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
+                filteredHistoryItemsList =
+                    SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, false, selectedWishType)
                 searchedHistoryItemsList = ArrayList(filteredHistoryItemsList)
                 setupRecyclerView(filteredHistoryItemsList)
                 historyAdapter.updateList(filteredHistoryItemsList)
@@ -382,7 +393,7 @@ class HistoryFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun addNewItem(historyItem: HistoryItem) {
         historyItemsList.add(historyItem)
-        val newFilteredList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
+        val newFilteredList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, false, selectedWishType)
         val newIndex = newFilteredList.indexOf(historyItem)
         filteredHistoryItemsList.clear()
         filteredHistoryItemsList.addAll(newFilteredList)
@@ -407,7 +418,8 @@ class HistoryFragment : Fragment() {
 
         if (newPosition != -1) {
             historyItemsList[newPosition] = newHistoryItem
-            val newFilteredList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, selectedWishType)
+            val newFilteredList =
+                SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, false, selectedWishType)
             val updatedIndex = newFilteredList.indexOf(newHistoryItem)
             filteredHistoryItemsList.clear()
             filteredHistoryItemsList.addAll(newFilteredList)
@@ -439,6 +451,48 @@ class HistoryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun showPopup() {
+        val filterOptions = SortType.entries.drop(1).map { it.displayName }
+
+        if (popupWindow == null) {
+            val inflater = LayoutInflater.from(context)
+            val view = inflater.inflate(R.layout.history_filter_pop_up, null)
+
+            // Get views from XML
+            val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewFilters)
+            val btnApply: Button = view.findViewById(R.id.apply_filter_button)
+
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            val adapter = HistoryFilterAdapter(filterOptions)
+            recyclerView.adapter = adapter
+
+            popupWindow = PopupWindow(
+                view,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                true
+            ).apply {
+                elevation = 10f
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            }
+
+            btnApply.setOnClickListener {
+                val (selectedFilter, isAscending) = adapter.getSelectedFilter()
+                val sortType = SortType.fromDisplayName(selectedFilter)
+
+                if (sortType != null) {
+                    filteredHistoryItemsList = SorterUtil.filterByType(filteredHistoryItemsList, sortType, isAscending)
+                    setupRecyclerView(filteredHistoryItemsList)
+                    popupWindow?.dismiss()
+                } else {
+                    Log.e("showPopup", "Invalid sort type: $selectedFilter")
+                }
+            }
+        }
+
+        popupWindow?.showAsDropDown(binding.filterButton, 0, 10)
     }
 
 
