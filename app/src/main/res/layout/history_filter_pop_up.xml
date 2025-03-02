@@ -4,10 +4,22 @@
               android:layout_height="wrap_content"
               android:orientation="vertical"
               android:background="@drawable/filter_pop_up_bg"
+              android:gravity="center_horizontal"
+              android:layout_gravity="center_horizontal"
               android:padding="10dp">
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewFilters"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+    <Button
+            android:text="@string/apply_filter"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:background="@drawable/filter_item_bg"
+            android:id="@+id/apply_filter_button"/>
+
 </LinearLayout>

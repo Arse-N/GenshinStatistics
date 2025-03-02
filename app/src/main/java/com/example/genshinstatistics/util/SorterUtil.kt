@@ -9,8 +9,8 @@ object SorterUtil {
     fun sortAndFilter(
         list: ArrayList<HistoryItem>,
         sortBy: SortType? = null,
+        ascending: Boolean = false,
         filterByWishType: String? = WishType.CHARACTER_WISH.displayName,
-        ascending: Boolean = false
     ): ArrayList<HistoryItem> {
 
         val filteredList = if (filterByWishType != null) {
@@ -20,14 +20,30 @@ object SorterUtil {
         }
 
         val sortedList = when (sortBy) {
-            SortType.WISH_TYPE -> filteredList.sortedBy { it.wishType }
+            SortType.WISH_TYPE -> filteredList.sortedWith(compareBy({ BaseUtil.parseDate(it.winDate) }, { it.wishType }))
             SortType.WIN_DATE -> filteredList.sortedBy { BaseUtil.parseDate(it.winDate) }
             SortType.NAME -> filteredList.sortedBy { it.name }
             SortType.WISH_RATE -> filteredList.sortedBy { it.wishRate }
             null -> filteredList
         }
-//        val finalSortedList = sortedList.sortedBy { BaseUtil.parseDate(it.winDate) }
         return if (ascending) ArrayList(sortedList) else ArrayList(sortedList.reversed())
     }
+
+    fun filterByType(
+        filteredList: ArrayList<HistoryItem>,
+        sortBy: SortType? = null,
+        ascending: Boolean = false
+    ): ArrayList<HistoryItem> {
+
+        val sortedList = when (sortBy) {
+            SortType.WISH_TYPE -> filteredList.sortedWith(compareBy({ BaseUtil.parseDate(it.winDate) }, { it.wishType }))
+            SortType.WIN_DATE -> filteredList.sortedBy { BaseUtil.parseDate(it.winDate) }
+            SortType.NAME -> filteredList.sortedBy { it.name }
+            SortType.WISH_RATE -> filteredList.sortedBy { it.wishRate }
+            null -> filteredList
+        }
+        return if (ascending) ArrayList(sortedList) else ArrayList(sortedList.reversed())
+    }
+
 
 }
