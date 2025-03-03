@@ -7,13 +7,14 @@
         android:layout_height="match_parent"
         android:layout_marginTop="93dp"
         android:background="@color/milk"
-        tools:context=".ui.home.StatisticFragment">
+        tools:context=".ui.statistic.StatisticFragment">
+
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/linearLayout"
+            android:id="@+id/statistics_filtering_layout"
             android:translationZ="10dp"
             app:layout_constraintTop_toTopOf="parent">
         <LinearLayout
@@ -44,12 +45,13 @@
                     android:orientation="horizontal"
                     android:gravity="end">
                 <LinearLayout
+                        android:id="@+id/statistic_type_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/spinner_bg"
                         android:orientation="horizontal">
                     <Spinner
-                            android:id="@+id/wish_type_selector"
+                            android:id="@+id/statistic_type_selector"
                             android:layout_width="wrap_content"
                             android:maxWidth="160dp"
                             android:layout_height="match_parent"
@@ -64,6 +66,8 @@
                             android:textStyle="bold">
                     </Spinner>
                     <LinearLayout
+
+                            android:id="@+id/statistic_arrow_down_layout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
@@ -76,41 +80,20 @@
                                 android:layout_height="25dp"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginEnd="10dp"
-                                android:id="@+id/wish_type_arrow"/>
+                                android:id="@+id/statistic_type_arrow"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
+
+        <ImageButton
+                android:src="@drawable/ic_filter"
+                android:background="@drawable/round_button_bg"
+                android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:id="@+id/filterButton"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1">
-            <ImageButton
-                    android:src="@drawable/ic_add"
-                    android:background="@drawable/round_button_bg"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="10dp"
-                    android:id="@+id/addButton"/>
-        </LinearLayout>
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_height="30dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1">
-            <ImageButton
-                    android:src="@drawable/ic_filter"
-                    android:background="@drawable/round_button_bg"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/filterButton"
-                    android:layout_marginEnd="15dp"/>
-        </LinearLayout>
+                android:layout_marginEnd="15dp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
