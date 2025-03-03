@@ -4,12 +4,15 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.genshinstatistics.R
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.random.Random
 
 object BaseUtil {
 
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     fun generateCode(): String {
         val length = 8
         val code = StringBuilder(length)
@@ -22,27 +25,30 @@ object BaseUtil {
         return code.toString()
     }
 
-    fun chooseColor(context: Context, pullRate: Int): Int {
+    fun chooseColor(context: Context, wishRate: Int): Int {
         val colorResId = when {
-            pullRate <= 15 -> R.color.rarity_v1
-            pullRate in 16..30 -> R.color.rarity_v2
-            pullRate in 31..50 -> R.color.rarity_v3
-            pullRate in 51..69 -> R.color.rarity_v4
+            wishRate <= 15 -> R.color.rarity_v1
+            wishRate in 16..30 -> R.color.rarity_v2
+            wishRate in 31..50 -> R.color.rarity_v3
+            wishRate in 51..69 -> R.color.rarity_v4
             else -> R.color.rarity_v5
         }
         return context.getColor(colorResId)
     }
 
+    fun parseDate(dateStr: String?): Date {
+        return try {
+            dateStr?.let { dateFormat.parse(it) } ?: Date(0)
+        } catch (e: Exception) {
+            Date(0)
+        }
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getFormattedDate(): String {
-        // Get the current date
         val today = LocalDate.now()
-
-        // Define the desired date format
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-
-        // Format the date
         return today.format(formatter)
     }
 }
