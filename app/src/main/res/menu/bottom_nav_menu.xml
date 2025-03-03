@@ -8,7 +8,7 @@
 
     <item
             android:id="@+id/navigation_statistic"
-            android:icon="@drawable/ic_home"
+            android:icon="@drawable/ic_statistics"
             android:title="@string/statistic"/>
 
     <item

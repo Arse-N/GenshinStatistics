@@ -13,7 +13,7 @@
 
     <fragment
             android:id="@+id/navigation_statistic"
-            android:name="com.example.genshinstatistics.ui.home.StatisticFragment"
+            android:name="com.example.genshinstatistics.ui.statistic.StatisticFragment"
             android:label="@string/statistic"
             tools:layout="@layout/fragment_statistic"/>
 
