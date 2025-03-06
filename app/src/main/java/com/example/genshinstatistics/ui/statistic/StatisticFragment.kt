@@ -13,7 +13,15 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.genshinstatistics.adapters.HistoryItemAdapter
+import com.example.genshinstatistics.adapters.OwnedItemGridAdapter
+import com.example.genshinstatistics.constants.ArchiveCharacterData
+import com.example.genshinstatistics.constants.ArchiveWeaponData
 import com.example.genshinstatistics.databinding.FragmentStatisticBinding
+import com.example.genshinstatistics.dto.ItemCount
+import com.example.genshinstatistics.enums.ItemType
 import com.example.genshinstatistics.enums.SortType
 import com.example.genshinstatistics.enums.StatisticType
 import com.example.genshinstatistics.enums.WishType
@@ -26,6 +34,7 @@ class StatisticFragment : Fragment() {
 
     private var _binding: FragmentStatisticBinding? = null
     private val binding get() = _binding!!
+    private lateinit var ownedItemGridAdapter: OwnedItemGridAdapter
     private lateinit var historyItemsList: ArrayList<HistoryItem>
     private lateinit var filteredHistoryItemsList: ArrayList<HistoryItem>
     private lateinit var statisticTypeSelector: Spinner
@@ -62,12 +71,37 @@ class StatisticFragment : Fragment() {
             @SuppressLint("NotifyDataSetChanged")
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedStatisticType = statisticTypes[position].displayName
+                when(selectedStatisticType){
+                    StatisticType.OWNED_CHARACTERS.displayName -> showOwnedItems(ItemType.CHARACTER)
+                    StatisticType.OWNED_WEAPON.displayName -> showOwnedItems(ItemType.WEAPON)
+                }
             }
+
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
     }
+
+    private fun showOwnedItems(itemType: ItemType) {
+        val groupedItems = historyItemsList
+            .groupingBy { it.name }
+            .eachCount()
+            .map { (name, count) ->
+                val item = when (itemType) {
+                    ItemType.CHARACTER -> ArchiveCharacterData.Characthers.firstOrNull { it.name == name }
+                    ItemType.WEAPON -> ArchiveWeaponData.Weapons.firstOrNull { it.name == name }
+                }
+                item?.let { ItemCount(it.name, it.icon, it.iconBgColor, itemType, if (itemType == ItemType.WEAPON) count else count - 1) }
+            }
+            .filterNotNull()
+
+        ownedItemGridAdapter = OwnedItemGridAdapter( groupedItems)
+        binding.ownedItems.apply {
+            adapter = ownedItemGridAdapter
+        }
+    }
+
 
 
 
