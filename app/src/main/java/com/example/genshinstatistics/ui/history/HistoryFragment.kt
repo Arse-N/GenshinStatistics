@@ -56,6 +56,8 @@ class HistoryFragment : Fragment() {
 //        val historyViewModel = ViewModelProvider(this).get(StatisticViewModel::class.java)
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
         historyItemsList = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
+        val itemToRemove = historyItemsList.firstOrNull { it.wishType == "Chronicled" }
+
         historySearchBar = binding.historySearchBar
         historySearchBar.clearFocus()
         filteredHistoryItemsList =
