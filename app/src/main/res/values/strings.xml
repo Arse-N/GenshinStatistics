@@ -20,4 +20,7 @@
     <string name="statistic">Statistic</string>
     <string name="filter_by">Filter by</string>
     <string name="apply_filter">Apply Filter</string>
+    <string name="fifty_50_wins">50/50 wins</string>
+    <string name="fifty_50_wins_strike">50/50 wins strike</string>
+    <string name="fifty_50_lose_strike">50/50 lose strike</string>
 </resources>
