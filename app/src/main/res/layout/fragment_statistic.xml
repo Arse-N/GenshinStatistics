@@ -126,7 +126,6 @@
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/item_bg"
                         android:gravity="center_horizontal">
                     <TextView
                             android:id="@+id/fifty_50_wins_title"
@@ -161,7 +160,6 @@
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/item_bg"
                         android:gravity="center_horizontal">
                     <TextView
                             android:id="@+id/fifty_50_wins_strike_title"
@@ -196,7 +194,6 @@
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/item_bg"
                         android:gravity="center_horizontal">
                     <TextView
                             android:id="@+id/fifty_50_lose_strike_title"
@@ -233,14 +230,13 @@
                     android:id="@+id/primogems"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="5dp"
-                    android:background="@drawable/item_bg"
+                    android:background="@drawable/ic_wish_stat_bg"
                     android:gravity="center_horizontal"
                     android:layout_weight="1.5">
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/item_bg">
+                        android:layout_height="match_parent">
                     <TextView
                             android:id="@+id/primogems_value"
                             android:text="10"
@@ -270,14 +266,13 @@
                     android:id="@+id/wish_pulls"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="5dp"
-                    android:background="@drawable/item_bg"
+                    android:background="@drawable/ic_wish_stat_bg"
                     android:gravity="center_horizontal"
                     android:layout_weight="1">
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/item_bg">
+                        android:layout_height="match_parent">
                     <TextView
                             android:id="@+id/wish_pulls_value"
                             android:text="10"
@@ -307,14 +302,13 @@
                     android:id="@+id/standard_pulls"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="5dp"
-                    android:background="@drawable/item_bg"
+                    android:background="@drawable/ic_wish_stat_bg"
                     android:gravity="center_horizontal"
                     android:layout_weight="1">
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/item_bg">
+                        android:layout_height="match_parent">
                     <TextView
                             android:id="@+id/standard_pulls_value"
                             android:text="10"
