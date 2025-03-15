@@ -30,6 +30,7 @@ import com.example.genshinstatistics.enums.SortType
 import com.example.genshinstatistics.enums.WinRateType
 import com.example.genshinstatistics.enums.WishType
 import com.example.genshinstatistics.model.HistoryItem
+import com.example.genshinstatistics.util.BannerFetcher
 import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
 import com.example.genshinstatistics.util.SorterUtil

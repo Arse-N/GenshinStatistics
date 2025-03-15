@@ -3,8 +3,11 @@ package com.example.genshinstatistics.adapters
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.request.CachePolicy
+import com.example.genshinstatistics.model.BannerData
 
-class BannerSliderAdapter(private val images: List<Int>) :
+class BannerSliderAdapter(private val bannersData: List<BannerData>) :
     RecyclerView.Adapter<BannerSliderAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: ImageView) : RecyclerView.ViewHolder(view)
@@ -21,8 +24,13 @@ class BannerSliderAdapter(private val images: List<Int>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        (holder.itemView as ImageView).setImageResource(images[position])
+
+        (holder.itemView as ImageView).load(bannersData.get(position).imageUrl) {
+            crossfade(true)
+            memoryCachePolicy(CachePolicy.ENABLED)
+            diskCachePolicy(CachePolicy.ENABLED)
+        }
     }
 
-    override fun getItemCount(): Int = images.size
+    override fun getItemCount(): Int = bannersData.size
 }

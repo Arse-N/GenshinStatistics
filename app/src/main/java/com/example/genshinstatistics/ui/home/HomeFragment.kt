@@ -11,11 +11,18 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.adapters.BannerSliderAdapter
+import com.example.genshinstatistics.model.BannerData
+import com.example.genshinstatistics.util.BannerFetcher
+import com.example.genshinstatistics.util.JsonUtil
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeFragment : Fragment() {
     private lateinit var bannerViewPager: ViewPager2
     private lateinit var dotIndicators: LinearLayout
     private val sliderHandler = Handler(Looper.getMainLooper())
+    private var bannerFetcher = BannerFetcher()
 
     private val imageList = listOf(
         R.drawable.ic_anemo_bg,
@@ -30,13 +37,43 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         bannerViewPager = view.findViewById(R.id.bannerViewPager)
         dotIndicators = view.findViewById(R.id.dotIndicators)
+        setupBannersData()
+    }
 
-        bannerViewPager.adapter = BannerSliderAdapter(imageList)
+    private fun setupBannersData() {
+        var bannersData: List<BannerData>? = JsonUtil.readFromBannersJson(requireContext())
+        if (!bannersData.isNullOrEmpty()) {
+            val firstBanner = bannersData[0]
+            val today = Date()
 
-        // Set up dots for each page
+            // Safely parse the end date
+            val end = try {
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(firstBanner.end)
+            } catch (e: ParseException) {
+                null // If parsing fails, set end to null
+            }
+
+            // Check if end date is not null and if the current date is after it
+            if (end != null && today.after(end)) {
+                // Fetch new banners if the end date has passed
+                bannerFetcher.fetchBanners { banners ->
+                    JsonUtil.writeToBannerJson(requireContext(), banners)
+                    bannersData = banners
+                }
+            }
+        } else {
+            // If bannersData is empty or null, fetch banners
+            bannerFetcher.fetchBanners { banners ->
+                JsonUtil.writeToBannerJson(requireContext(), banners)
+                bannersData = banners
+            }
+        }
+
+
+        bannerViewPager.adapter = bannersData?.let { BannerSliderAdapter(it) }
+
         setupDotIndicators()
 
         bannerViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -45,7 +82,6 @@ class HomeFragment : Fragment() {
                 sliderHandler.removeCallbacks(sliderRunnable)
                 sliderHandler.postDelayed(sliderRunnable, 3000)
 
-                // Update dots when page changes
                 updateDotIndicators(position)
             }
         })
