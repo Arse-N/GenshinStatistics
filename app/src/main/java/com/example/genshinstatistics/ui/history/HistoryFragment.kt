@@ -30,6 +30,7 @@ import com.example.genshinstatistics.enums.SortType
 import com.example.genshinstatistics.enums.WinRateType
 import com.example.genshinstatistics.enums.WishType
 import com.example.genshinstatistics.model.HistoryItem
+import com.example.genshinstatistics.util.BannerFetcher
 import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
 import com.example.genshinstatistics.util.SorterUtil
@@ -56,7 +57,6 @@ class HistoryFragment : Fragment() {
 //        val historyViewModel = ViewModelProvider(this).get(StatisticViewModel::class.java)
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
         historyItemsList = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
-        val itemToRemove = historyItemsList.firstOrNull { it.wishType == "Chronicled" }
 
         historySearchBar = binding.historySearchBar
         historySearchBar.clearFocus()

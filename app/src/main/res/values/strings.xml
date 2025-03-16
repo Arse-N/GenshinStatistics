@@ -5,7 +5,8 @@
     <string name="character">Character</string>
     <string name="weapon">Weapon</string>
     <string name="standard">Standard</string>
-    <string name="add_item">Add Item</string>
+    <string name="add_history_item">Add History Item</string>
+    <string name="add_Goal_item">Add Goal Item</string>
     <string name="name">Name</string>
     <string name="win_date">Win Date</string>
     <string name="choose_date">Choose Date</string>
@@ -23,4 +24,5 @@
     <string name="fifty_50_wins">50/50 wins</string>
     <string name="fifty_50_wins_strike">50/50 wins strike</string>
     <string name="fifty_50_lose_strike">50/50 lose strike</string>
+    <string name="ascension">Ascension</string>
 </resources>

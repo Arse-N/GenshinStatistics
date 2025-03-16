@@ -9,9 +9,9 @@
         android:background="@android:color/transparent"
         android:layout_marginEnd="10dp">
     <LinearLayout
-            android:id="@+id/add_reminder_dialog_first_page"
+            android:id="@+id/add_goal_item_dialog"
             android:layout_width="match_parent"
-            android:layout_height="420dp"
+            android:layout_height="250dp"
             android:background="@drawable/add_dialog_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
                         android:id="@+id/dialog_close"/>
 
                 <TextView
-                        android:text="@string/add_history_item"
+                        android:text="@string/add_Goal_item"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp"
@@ -116,7 +116,7 @@
                     android:layout_marginEnd="30dp"
                     android:text="@string/please_select_item"/>
             <LinearLayout
-                    android:id="@+id/wish_type_layout"
+                    android:id="@+id/asc_layout"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_marginTop="10dp"
@@ -126,7 +126,7 @@
                     android:layout_marginEnd="40dp"
                     android:background="@drawable/item_bg">
                 <TextView
-                        android:text="@string/wish_type"
+                        android:text="@string/ascension"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -168,150 +168,6 @@
                     </LinearLayout>
 
 
-            </LinearLayout>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginEnd="40dp"
-                    android:layout_height="wrap_content">
-                <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="start"
-                        android:layout_weight="2">
-            <LinearLayout
-                    android:id="@+id/wish_rate_layout"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-                <TextView
-                        android:text="@string/wish_rate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:textSize="14sp"
-                        style="@style/primaryTextColor"
-                        android:textStyle="bold"
-                        android:textAlignment="center"
-                        android:id="@+id/wish_rate_input_title"
-                        android:layout_weight="1"/>
-                <LinearLayout
-                        android:id="@+id/number_picker_layout"
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:background="@drawable/item_bg"
-                        android:gravity="center">
-                    <android.widget.NumberPicker
-                            android:id="@+id/wish_rate_selector"
-                            android:layout_width="50dp"
-                            android:layout_height="120dp"
-                            android:textAlignment="center"
-                            android:background="@android:color/transparent"
-                            android:textSize="25sp"
-                            android:padding="10dp"
-                            android:value="1"/>
-
-                </LinearLayout>
-            </LinearLayout>
-                </LinearLayout>
-                <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="end">
-                <LinearLayout
-                        android:id="@+id/rate_layout"
-                        android:orientation="vertical"
-                        android:layout_width="120dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-                    <TextView
-                            android:text="@string/win_rate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:textSize="14sp"
-                            style="@style/primaryTextColor"
-                            android:textStyle="bold"
-                            android:textAlignment="center"
-                            android:id="@+id/win_rate_input_title"
-                            android:layout_weight="1"/>
-                    <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="120dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/item_bg"
-                            android:gravity="center">
-                            <Spinner
-                                    android:id="@+id/win_rate_selector"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:paddingStart="5dp"
-                                    android:paddingEnd="5dp"
-                                    android:background="@android:color/transparent"
-                                    android:popupBackground="@color/milk"
-                                    android:popupTheme="@style/secondaryTextColor"
-                                    android:spinnerMode="dropdown"
-                                    android:textColor="@android:color/black"
-                                    android:textStyle="bold">
-                            </Spinner>
-                    </LinearLayout>
-                </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                    android:id="@+id/win_date_layout"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="20dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginEnd="40dp"
-                    android:background="@drawable/item_bg">
-                <TextView
-                        android:text="@string/win_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:layout_marginStart="10dp"
-                        style="@style/primaryTextColor"
-                        android:textStyle="bold"
-                        android:textAlignment="center"
-                        android:id="@+id/win_date_input_title"
-                        android:layout_weight="1"/>
-                <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="13dp"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="13dp"
-                        android:background="@color/black"
-                        android:id="@+id/line_between_3"/>
-                <EditText
-                        android:id="@+id/win_date_selector"
-                        android:layout_width="150dp"
-                        android:layout_height="match_parent"
-                        android:textAlignment="center"
-                        android:hint="@string/choose_date"
-                        android:inputType="date"
-                        android:textSize="14sp"
-                        style="@style/secondaryTextColor"
-                        android:dropDownHeight="200dp"
-                        android:padding="10dp"
-                        android:drawableEnd="@drawable/ic_date"
-                        android:background="@android:color/transparent"
-                        android:layout_weight="2"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
