@@ -1,70 +1,82 @@
 package com.example.genshinstatistics.ui.home
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.*
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.adapters.BannerSliderAdapter
+import com.example.genshinstatistics.adapters.GoalItemAdapter
+import com.example.genshinstatistics.constants.ArchiveCharacterData
+import com.example.genshinstatistics.constants.ArchiveWeaponData
+import com.example.genshinstatistics.databinding.FragmentHomeBinding
+import com.example.genshinstatistics.enums.ItemType
 import com.example.genshinstatistics.model.BannerData
+import com.example.genshinstatistics.model.GoalItem
 import com.example.genshinstatistics.util.BannerFetcher
+import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeFragment : Fragment() {
+
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private lateinit var bannerViewPager: ViewPager2
     private lateinit var dotIndicators: LinearLayout
     private val sliderHandler = Handler(Looper.getMainLooper())
     private var bannerFetcher = BannerFetcher()
+    private lateinit var goalAdapter: GoalItemAdapter
+    private lateinit var goalItemList: ArrayList<GoalItem>
+    private lateinit var bannersData: List<BannerData>
 
-    private val imageList = listOf(
-        R.drawable.ic_anemo_bg,
-        R.drawable.ic_geo_bg,
-        R.drawable.ic_hydro_bg
-    )
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_home, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        bannerViewPager = view.findViewById(R.id.bannerViewPager)
-        dotIndicators = view.findViewById(R.id.dotIndicators)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        goalItemList = JsonUtil.readFromGoalJson(requireContext()) ?: ArrayList()
+        setupRecyclerView(goalItemList)
+        bannerViewPager = binding.bannerViewPager
+        dotIndicators = binding.dotIndicators
+        val addGoalButton: ImageView = binding.addButton
+        addGoalButton.setOnClickListener(View.OnClickListener {
+            showGoalItemDialog()
+        })
         setupBannersData()
+        return binding.root
     }
 
     private fun setupBannersData() {
-        var bannersData: List<BannerData>? = JsonUtil.readFromBannersJson(requireContext())
-        if (!bannersData.isNullOrEmpty()) {
+        bannersData = JsonUtil.readFromBannersJson(requireContext())!!
+        if (bannersData.isNotEmpty()) {
             val firstBanner = bannersData[0]
             val today = Date()
-
-            // Safely parse the end date
             val end = try {
                 SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(firstBanner.end)
             } catch (e: ParseException) {
-                null // If parsing fails, set end to null
+                null
             }
 
-            // Check if end date is not null and if the current date is after it
             if (end != null && today.after(end)) {
-                // Fetch new banners if the end date has passed
                 bannerFetcher.fetchBanners { banners ->
                     JsonUtil.writeToBannerJson(requireContext(), banners)
                     bannersData = banners
                 }
             }
         } else {
-            // If bannersData is empty or null, fetch banners
             bannerFetcher.fetchBanners { banners ->
                 JsonUtil.writeToBannerJson(requireContext(), banners)
                 bannersData = banners
@@ -72,7 +84,7 @@ class HomeFragment : Fragment() {
         }
 
 
-        bannerViewPager.adapter = bannersData?.let { BannerSliderAdapter(it) }
+        bannerViewPager.adapter = BannerSliderAdapter(bannersData)
 
         setupDotIndicators()
 
@@ -87,26 +99,150 @@ class HomeFragment : Fragment() {
         })
     }
 
+    private fun setupRecyclerView(goalItemList: MutableList<GoalItem>) {
+        goalAdapter = GoalItemAdapter(goalItemList) { position ->
+            removeItem(position)
+        }
+
+        binding.goalItems.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = goalAdapter
+        }
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showGoalItemDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.add_goal_item_dialog, null)
+        val nameSpinner: AutoCompleteTextView = dialogView.findViewById(R.id.item_selector)
+        val ascTypeSpinner: Spinner = dialogView.findViewById(R.id.wish_type_selector)
+        val errorText: TextView = dialogView.findViewById(R.id.item_selector_error)
+        var chosenItem = ""
+        var chosenAscType = ""
+
+        setUpCharacterData(nameSpinner, chosenItem) { itemName ->
+            if (itemName != null) {
+                chosenItem = itemName
+                val foundItem = ArchiveWeaponData.Weapons.find { it.name == itemName }
+                    ?: ArchiveCharacterData.Characthers.find { it.name == itemName }
+                val itemType = foundItem?.type ?: return@setUpCharacterData
+                chosenAscType = setupAscData(ascTypeSpinner, itemType)
+            }
+        }
+
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        dialog.setCanceledOnTouchOutside(false)
+        dialogView.findViewById<View>(R.id.dialog_close).setOnClickListener {
+            goalAdapter.updateList(goalItemList)
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.dialog_done).setOnClickListener {
+            var isValid = true
+
+            if (chosenItem.isNullOrEmpty()) {
+                errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.rarity_v5))
+                isValid = false
+            } else {
+                errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            }
+
+            if (isValid) {
+                val goalItem = GoalItem(BaseUtil.generateCode(), chosenItem, chosenAscType)
+                addNewItem(goalItem)
+                dialog.dismiss();
+            }
+
+        }
+
+        dialog.show()
+    }
+
+    private fun setUpCharacterData(
+        spinner: AutoCompleteTextView,
+        selectedItem: String?,
+        onItemSelected: (String?) -> Unit
+    ) {
+
+        val sortedItems = (ArchiveCharacterData.Characthers + ArchiveWeaponData.Weapons)
+            .map { it.name ?: "Unknown" }
+            .sortedByDescending { it }
+
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.custom_dropdown_item, sortedItems)
+
+        spinner.setAdapter(adapter)
+        spinner.threshold = 1
+        spinner.setText(selectedItem)
+        spinner.setOnClickListener {
+            spinner.showDropDown()
+        }
+
+        spinner.setOnItemClickListener { parent, _, position, _ ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            onItemSelected(selectedItem)
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setupAscData(
+        rankSpinner: Spinner,
+        type: ItemType
+    ): String {
+        val rankOptions = when (type) {
+            ItemType.WEAPON -> listOf("R1", "R2", "R3", "R4", "R5")
+            ItemType.CHARACTER -> listOf("C0", "C1", "C2", "C3", "C4", "C5", "C6")
+        }
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, rankOptions)
+        rankSpinner.adapter = adapter
+
+        var selectedRank = rankOptions.first()
+
+        rankSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                selectedRank = rankOptions[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        return selectedRank
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun addNewItem(goalItem: GoalItem) {
+        goalItemList.add(goalItem)
+        goalAdapter.notifyItemInserted(goalItemList.size - 1)
+        JsonUtil.writeToGoalJson(requireContext(), goalItemList)
+    }
+
+    fun removeItem(position: Int) {
+        goalItemList.removeAt(position)
+        goalAdapter.notifyItemRemoved(position)
+        JsonUtil.writeToGoalJson(requireContext(), goalItemList)
+    }
+
     private fun setupDotIndicators() {
-        // Clear any existing dots
         dotIndicators.removeAllViews()
 
-        // Create a dot for each image in the ViewPager
-        for (i in imageList.indices) {
+        for (i in bannersData.indices) {
             val dot = View(context).apply {
-                val width = resources.getDimensionPixelSize(R.dimen.dot_width) // 5dp
-                val height = resources.getDimensionPixelSize(R.dimen.dot_height) // 8dp
+                val width = resources.getDimensionPixelSize(R.dimen.dot_width)
+                val height = resources.getDimensionPixelSize(R.dimen.dot_height)
                 val params = LinearLayout.LayoutParams(width, height).apply {
-                    marginEnd = resources.getDimensionPixelSize(R.dimen.dot_margin) // 5dp spacing
+                    marginEnd = resources.getDimensionPixelSize(R.dimen.dot_margin)
                 }
                 layoutParams = params
-                setBackgroundResource(R.drawable.ic_unselected_dot_bg) // Default unselected dot
+                setBackgroundResource(R.drawable.ic_unselected_dot_bg)
             }
 
             dotIndicators.addView(dot)
         }
-
-        // Set the first dot as selected
         updateDotIndicators(0)
     }
 
@@ -123,7 +259,13 @@ class HomeFragment : Fragment() {
     }
 
     private val sliderRunnable = Runnable {
-        val nextItem = (bannerViewPager.currentItem + 1) % imageList.size
+        val nextItem = (bannerViewPager.currentItem + 1) % bannersData.size
         bannerViewPager.setCurrentItem(nextItem, true)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }
