@@ -60,7 +60,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupBannersData() {
-        bannersData = JsonUtil.readFromBannersJson(requireContext())!!
+        bannersData = JsonUtil.readFromBannersJson(requireContext()) ?: ArrayList()
         if (bannersData.isNotEmpty()) {
             val firstBanner = bannersData[0]
             val today = Date()
@@ -83,11 +83,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-
         bannerViewPager.adapter = BannerSliderAdapter(bannersData)
-
         setupDotIndicators()
-
         bannerViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -103,7 +100,6 @@ class HomeFragment : Fragment() {
         goalAdapter = GoalItemAdapter(goalItemList) { position ->
             removeItem(position)
         }
-
         binding.goalItems.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = goalAdapter

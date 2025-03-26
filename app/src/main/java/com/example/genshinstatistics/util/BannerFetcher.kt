@@ -20,7 +20,7 @@ class BannerFetcher {
     fun fetchBanners(onBannersFetched: (List<BannerData>) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             val banners = withContext(Dispatchers.IO) {
-                val url = "https://paimon.moe/_app/immutable/chunks/timeline-377d9c44.js"
+                val url = "https://paimon.moe/_app/immutable/chunks/timeline-1ce1281c.js"
                 val request = Request.Builder().url(url).build()
 
                 try {

@@ -620,6 +620,18 @@ object ArchiveCharacterData {
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 52,
+                name = "Varesa",
+                region = Region.NATLAN,
+                iconBgColor = R.drawable.ic_electro_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_varesa.png",
+                birthdate = "11/15",
+                itemTypeIcon = R.drawable.ic_element_electro,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
             )
         )
     }
