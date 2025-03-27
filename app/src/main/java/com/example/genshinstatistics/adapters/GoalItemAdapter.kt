@@ -21,7 +21,7 @@ import com.example.genshinstatistics.ui.home.HomeFragment
 
 class GoalItemAdapter(
     private var goalItemsList: MutableList<GoalItem>,
-    private val onRemoveItem: (Int) -> Unit
+    private val onItemRemove: (Int) -> Unit
 ) : RecyclerView.Adapter<GoalItemAdapter.GoalItemViewHolder>() {
 
     @NonNull
@@ -52,14 +52,11 @@ class GoalItemAdapter(
                     iconBgCardView.setBackgroundResource(it)
                 }
             }
-        }
 
-        holder.itemView.layoutParams = (holder.itemView.layoutParams as RecyclerView.LayoutParams).apply {
-            bottomMargin = if (position == itemCount - 1) 150 else 0
         }
 
         holder.removeButton.setOnClickListener {
-            (holder.itemView.context as? HomeFragment)?.removeItem(holder.adapterPosition)
+            onItemRemove(position)
         }
     }
 

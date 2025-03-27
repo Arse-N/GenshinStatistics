@@ -128,18 +128,6 @@ class StatisticFragment : Fragment() {
             )
         }
 
-//
-//        // Cache values
-//        savePullRateSum(
-//            requireContext(),
-//            standardSum,
-//            otherWishSum,
-//            primogemsSum,
-//            win50Count,
-//            win50Streak,
-//            lose50Streak
-//        )
-
         standardPulls.text = standardSum.toString()
         wishPulls.text = otherWishSum.toString()
         primogems.text = primogemsSum.toString()
@@ -147,13 +135,6 @@ class StatisticFragment : Fragment() {
         fifty50WinsStrike.text = win50Streak.toString()
         fifty50LoseStrike.text = lose50Streak.toString()
     }
-
-
-
-
-
-
-
 
 
 

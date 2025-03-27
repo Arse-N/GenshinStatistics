@@ -114,18 +114,25 @@ class HomeFragment : Fragment() {
         val nameSpinner: AutoCompleteTextView = dialogView.findViewById(R.id.item_selector)
         val ascTypeSpinner: Spinner = dialogView.findViewById(R.id.wish_type_selector)
         val errorText: TextView = dialogView.findViewById(R.id.item_selector_error)
-        var chosenItem = ""
+        var chosenItemName = ""
+        var chosenItemType = ItemType.CHARACTER
         var chosenAscType = ""
 
-        setUpCharacterData(nameSpinner, chosenItem) { itemName ->
+        setUpCharacterData(nameSpinner) { itemName ->
             if (itemName != null) {
-                chosenItem = itemName
+                chosenItemName = itemName
                 val foundItem = ArchiveWeaponData.Weapons.find { it.name == itemName }
                     ?: ArchiveCharacterData.Characthers.find { it.name == itemName }
-                val itemType = foundItem?.type ?: return@setUpCharacterData
-                chosenAscType = setupAscData(ascTypeSpinner, itemType)
+                chosenItemType = foundItem?.type ?: return@setUpCharacterData
+
+                setupAscData(ascTypeSpinner, chosenItemType) { itemRank ->
+                    if (itemRank != null) {
+                        chosenAscType = itemRank
+                    }
+                }
             }
         }
+
 
 
         val dialog = AlertDialog.Builder(requireContext())
@@ -141,7 +148,7 @@ class HomeFragment : Fragment() {
         dialogView.findViewById<View>(R.id.dialog_done).setOnClickListener {
             var isValid = true
 
-            if (chosenItem.isNullOrEmpty()) {
+            if (chosenItemName.isNullOrEmpty()) {
                 errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.rarity_v5))
                 isValid = false
             } else {
@@ -149,7 +156,7 @@ class HomeFragment : Fragment() {
             }
 
             if (isValid) {
-                val goalItem = GoalItem(BaseUtil.generateCode(), chosenItem, chosenAscType)
+                val goalItem = GoalItem(BaseUtil.generateCode(), chosenItemName, chosenAscType)
                 addNewItem(goalItem)
                 dialog.dismiss();
             }
@@ -161,7 +168,6 @@ class HomeFragment : Fragment() {
 
     private fun setUpCharacterData(
         spinner: AutoCompleteTextView,
-        selectedItem: String?,
         onItemSelected: (String?) -> Unit
     ) {
 
@@ -173,7 +179,6 @@ class HomeFragment : Fragment() {
 
         spinner.setAdapter(adapter)
         spinner.threshold = 1
-        spinner.setText(selectedItem)
         spinner.setOnClickListener {
             spinner.showDropDown()
         }
@@ -187,8 +192,9 @@ class HomeFragment : Fragment() {
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setupAscData(
         rankSpinner: Spinner,
-        type: ItemType
-    ): String {
+        type: ItemType,
+        onItemSelected: (String?) -> Unit
+    ) {
         val rankOptions = when (type) {
             ItemType.WEAPON -> listOf("R1", "R2", "R3", "R4", "R5")
             ItemType.CHARACTER -> listOf("C0", "C1", "C2", "C3", "C4", "C5", "C6")
@@ -197,17 +203,14 @@ class HomeFragment : Fragment() {
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, rankOptions)
         rankSpinner.adapter = adapter
 
-        var selectedRank = rankOptions.first()
-
         rankSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                selectedRank = rankOptions[position]
+                val selectedRank = rankOptions[position]
+                onItemSelected(selectedRank)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-
-        return selectedRank
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -220,6 +223,7 @@ class HomeFragment : Fragment() {
     fun removeItem(position: Int) {
         goalItemList.removeAt(position)
         goalAdapter.notifyItemRemoved(position)
+        goalAdapter.updateList(goalItemList)
         JsonUtil.writeToGoalJson(requireContext(), goalItemList)
     }
 
@@ -247,9 +251,9 @@ class HomeFragment : Fragment() {
         for (i in 0 until dotIndicators.childCount) {
             val dot = dotIndicators.getChildAt(i)
             if (i == position) {
-                dot.setBackgroundResource(R.drawable.ic_selected_dot_bg) // Change to selected drawable
+                dot.setBackgroundResource(R.drawable.ic_selected_dot_bg)
             } else {
-                dot.setBackgroundResource(R.drawable.ic_unselected_dot_bg) // Change to unselected drawable
+                dot.setBackgroundResource(R.drawable.ic_unselected_dot_bg)
             }
         }
     }
