@@ -1,10 +1,7 @@
 package com.example.genshinstatistics.util
 
 import com.example.genshinstatistics.model.BannerData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
@@ -13,33 +10,47 @@ import java.util.*
 
 class BannerFetcher {
 
-    private val client = OkHttpClient()
     private val imageBaseUrl = "https://paimon.moe/images/events/"
+    private val CHUNKS_PATH = "/_app/immutable/chunks/"
+    private val BASE_URL = "https://paimon.moe/"
+    private val client: OkHttpClient by lazy { OkHttpClient() }
 
+    fun getBannersFetchingUrl(): String? {
+        val request = Request.Builder().url(BASE_URL).build()
 
-    fun fetchBanners(onBannersFetched: (List<BannerData>) -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
+        return try {
+            val response = client.newCall(request).execute()
+            val html = response.body?.string()
+            val regex = Regex("""timeline-[a-zA-Z0-9]+\.js""")
+            val match = regex.find(html.orEmpty())
+            match?.value?.let { "$BASE_URL$CHUNKS_PATH$it" }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    fun fetchBanners(scope: CoroutineScope, onBannersFetched: (List<BannerData>) -> Unit) {
+        scope.launch(Dispatchers.Main) {
             val banners = withContext(Dispatchers.IO) {
-                val url = "https://paimon.moe/_app/immutable/chunks/timeline-1ce1281c.js"
-                val request = Request.Builder().url(url).build()
+                val dynamicUrl = getBannersFetchingUrl() ?: return@withContext null
+//                val dynamicUrl = "https://paimon.moe/images/events/"
 
+                val request = Request.Builder().url(dynamicUrl).build()
                 try {
                     client.newCall(request).execute().use { response ->
                         if (response.isSuccessful) {
                             val jsContent = response.body?.string() ?: return@use null
                             extractBannerData(jsContent)
-                        } else {
-                            null
-                        }
+                        } else null
                     }
                 } catch (e: Exception) {
-                    e.printStackTrace()
+//                    e.printStackTrace()
                     null
                 }
             }
-            if (banners != null) {
-                onBannersFetched(banners)
-            }
+
+            banners?.let { onBannersFetched(it) }
         }
     }
 
@@ -71,15 +82,12 @@ class BannerFetcher {
 
                 if (start != null && end != null && today.after(start) && today.before(end)) {
                     if (name.contains("Banner", ignoreCase = true)) {
-                        banners.add(BannerData(id, name, startDate, endDate, imageBaseUrl + imageUrl))
+                        banners.add(BannerData(id, name, startDate, endDate, imageBaseUrl + imageUrl, j+1))
                     }
                 } else {
                     continue
                 }
             }
-//            if (banners.isNotEmpty()) {
-////                break
-//            }
         }
 
         return banners
