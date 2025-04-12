@@ -80,6 +80,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center">
+            <LinearLayout
+                    android:id="@+id/tabs_layout"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
             <ImageView
                     android:id="@+id/addButton"
                     android:layout_width="26dp"
@@ -87,9 +93,9 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_gravity="end"
+                    android:gravity="end"
                     app:srcCompat="@drawable/ic_square_add"/>
-
+            </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/goal_items"
                     android:layout_width="match_parent"
