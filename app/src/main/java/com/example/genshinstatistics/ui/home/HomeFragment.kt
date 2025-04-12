@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.genshinstatistics.R
@@ -20,6 +21,7 @@ import com.example.genshinstatistics.adapters.BannerSliderAdapter
 import com.example.genshinstatistics.adapters.GoalItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.constants.ArchiveWeaponData
+import com.example.genshinstatistics.constants.DefaultBannerData
 import com.example.genshinstatistics.databinding.FragmentHomeBinding
 import com.example.genshinstatistics.enums.ItemType
 import com.example.genshinstatistics.model.BannerData
@@ -27,6 +29,10 @@ import com.example.genshinstatistics.model.GoalItem
 import com.example.genshinstatistics.util.BannerFetcher
 import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -51,6 +57,8 @@ class HomeFragment : Fragment() {
         setupRecyclerView(goalItemList)
         bannerViewPager = binding.bannerViewPager
         dotIndicators = binding.dotIndicators
+//        val url: String? = bannerFetcher.getBannersFetchingUrl();
+//        println(url);
         val addGoalButton: ImageView = binding.addButton
         addGoalButton.setOnClickListener(View.OnClickListener {
             showGoalItemDialog()
@@ -60,41 +68,57 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupBannersData() {
-        bannersData = JsonUtil.readFromBannersJson(requireContext()) ?: ArrayList()
-        if (bannersData.isNotEmpty()) {
-            val firstBanner = bannersData[0]
-            val today = Date()
-            val end = try {
-                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(firstBanner.end)
-            } catch (e: ParseException) {
-                null
+        lifecycleScope.launch(Dispatchers.Main) {
+            bannersData = withContext(Dispatchers.IO) {
+                JsonUtil.readFromBannersJson(requireContext()) ?: ArrayList()
             }
 
-            if (end != null && today.after(end)) {
-                bannerFetcher.fetchBanners { banners ->
-                    JsonUtil.writeToBannerJson(requireContext(), banners)
-                    bannersData = banners
+            val today = Date()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+            val isExpired = bannersData.firstOrNull()?.let { banner ->
+                try {
+                    if (bannersData.size == 1) {
+                        banner.order == 1000
+                    } else {
+                        val endDate = banner.end?.let { dateFormat.parse(it) }
+                        endDate != null && today.after(endDate)
+                    }
+                } catch (e: ParseException) {
+                    true
+                }
+            } ?: true
+
+            if (isExpired) {
+                val newBannersData = withContext(Dispatchers.IO) {
+                    suspendCancellableCoroutine<List<BannerData>> { cont ->
+                        bannerFetcher.fetchBanners(lifecycleScope) { fetched ->
+                            cont.resume(fetched) {}
+                        }
+                    }
+                }
+                if (!newBannersData.isEmpty()) {
+                    bannersData = (newBannersData + DefaultBannerData.DefaultBanners).sortedBy { it.order }
+                }
+                withContext(Dispatchers.IO) {
+                    JsonUtil.writeToBannerJson(requireContext(), bannersData)
                 }
             }
-        } else {
-            bannerFetcher.fetchBanners { banners ->
-                JsonUtil.writeToBannerJson(requireContext(), banners)
-                bannersData = banners
-            }
+
+            bannerViewPager.adapter = BannerSliderAdapter(bannersData)
+            setupDotIndicators()
+
+            bannerViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    sliderHandler.removeCallbacks(sliderRunnable)
+                    sliderHandler.postDelayed(sliderRunnable, 3000)
+                    updateDotIndicators(position)
+                }
+            })
         }
-
-        bannerViewPager.adapter = BannerSliderAdapter(bannersData)
-        setupDotIndicators()
-        bannerViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                sliderHandler.removeCallbacks(sliderRunnable)
-                sliderHandler.postDelayed(sliderRunnable, 3000)
-
-                updateDotIndicators(position)
-            }
-        })
     }
+
 
     private fun setupRecyclerView(goalItemList: MutableList<GoalItem>) {
         goalAdapter = GoalItemAdapter(goalItemList) { position ->
