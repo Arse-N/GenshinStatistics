@@ -23,9 +23,12 @@ import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.constants.ArchiveWeaponData
 import com.example.genshinstatistics.constants.DefaultBannerData
 import com.example.genshinstatistics.databinding.FragmentHomeBinding
+import com.example.genshinstatistics.enums.GoalItemStatus
 import com.example.genshinstatistics.enums.ItemType
 import com.example.genshinstatistics.model.BannerData
 import com.example.genshinstatistics.model.GoalItem
+import com.example.genshinstatistics.model.HistoryItem
+import com.example.genshinstatistics.services.GoalItemService
 import com.example.genshinstatistics.util.BannerFetcher
 import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
@@ -46,27 +49,58 @@ class HomeFragment : Fragment() {
     private val sliderHandler = Handler(Looper.getMainLooper())
     private var bannerFetcher = BannerFetcher()
     private lateinit var goalAdapter: GoalItemAdapter
+    private lateinit var goalItemsService: GoalItemService
     private lateinit var goalItemList: ArrayList<GoalItem>
+    private lateinit var historyItems: ArrayList<HistoryItem>
+    private lateinit var filteredGoalItems: ArrayList<GoalItem>
     private lateinit var bannersData: List<BannerData>
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        goalItemList = JsonUtil.readFromGoalJson(requireContext()) ?: ArrayList()
-        setupRecyclerView(goalItemList)
-        bannerViewPager = binding.bannerViewPager
         dotIndicators = binding.dotIndicators
-//        val url: String? = bannerFetcher.getBannersFetchingUrl();
-//        println(url);
+        bannerViewPager = binding.bannerViewPager
+        setupBannersData()
+        goalItemList = JsonUtil.readFromGoalJson(requireContext()) ?: ArrayList()
+        historyItems = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
+        filteredGoalItems = goalItemList.filter { it.status == GoalItemStatus.TODO } as ArrayList<GoalItem>
+        goalItemsService = GoalItemService(historyItems, goalItemList, requireContext())
+        setupRecyclerView(filteredGoalItems)
+        setupGoalsData()
+        return binding.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupGoalsData() {
+
         val addGoalButton: ImageView = binding.addButton
         addGoalButton.setOnClickListener(View.OnClickListener {
             showGoalItemDialog()
         })
-        setupBannersData()
-        return binding.root
-    }
+        val goalTab: LinearLayout = binding.goalsTab
+        val goalTabText: TextView = binding.goalValue
+        val doneTab: LinearLayout = binding.doneTab
+        val doneTabText: TextView = binding.doneValue
+        goalTab.setOnClickListener(View.OnClickListener {
+            goalTab.setBackgroundResource(R.drawable.ic_goal_tab_bg_active)
+            goalTabText.setTextColor(resources.getColor(R.color.light_gold))
+            doneTab.setBackgroundResource(R.drawable.ic_goal_tab_bg_inactive)
+            doneTabText.setTextColor(resources.getColor(R.color.white))
+            filteredGoalItems = goalItemList.filter { it.status == GoalItemStatus.TODO } as ArrayList<GoalItem>
+            goalAdapter.updateList(filteredGoalItems)
+        })
 
+        doneTab.setOnClickListener(View.OnClickListener {
+            goalTab.setBackgroundResource(R.drawable.ic_goal_tab_bg_inactive)
+            goalTabText.setTextColor(resources.getColor(R.color.white))
+            doneTab.setBackgroundResource(R.drawable.ic_goal_tab_bg_active)
+            doneTabText.setTextColor(resources.getColor(R.color.light_gold))
+            filteredGoalItems = goalItemList.filter { it.status == GoalItemStatus.DONE } as ArrayList<GoalItem>
+            goalAdapter.updateList(filteredGoalItems)
+        })
+
+    }
     private fun setupBannersData() {
         lifecycleScope.launch(Dispatchers.Main) {
             bannersData = withContext(Dispatchers.IO) {
@@ -140,7 +174,8 @@ class HomeFragment : Fragment() {
         val errorText: TextView = dialogView.findViewById(R.id.item_selector_error)
         var chosenItemName = ""
         var chosenItemType = ItemType.CHARACTER
-        var chosenAscType = ""
+        var chosenAscType = "C"
+        var chosenGoalCount = 0
 
         setUpCharacterData(nameSpinner) { itemName ->
             if (itemName != null) {
@@ -151,7 +186,8 @@ class HomeFragment : Fragment() {
 
                 setupAscData(ascTypeSpinner, chosenItemType) { itemRank ->
                     if (itemRank != null) {
-                        chosenAscType = itemRank
+                        chosenAscType = itemRank[0].toString()
+                        chosenGoalCount = itemRank[1].digitToInt() + 1
                     }
                 }
             }
@@ -172,7 +208,7 @@ class HomeFragment : Fragment() {
         dialogView.findViewById<View>(R.id.dialog_done).setOnClickListener {
             var isValid = true
 
-            if (chosenItemName.isNullOrEmpty()) {
+            if (chosenItemName.isEmpty()) {
                 errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.rarity_v5))
                 isValid = false
             } else {
@@ -180,8 +216,9 @@ class HomeFragment : Fragment() {
             }
 
             if (isValid) {
-                val goalItem = GoalItem(BaseUtil.generateCode(), chosenItemName, chosenAscType)
-                addNewItem(goalItem)
+                val goalItem = GoalItem(BaseUtil.generateCode(), chosenItemName, chosenAscType, chosenGoalCount)
+                goalItemsService.createNewItem(goalItem)
+                goalAdapter.notifyItemInserted(goalItemList.size - 1)
                 dialog.dismiss();
             }
 
@@ -237,18 +274,20 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun addNewItem(goalItem: GoalItem) {
-        goalItemList.add(goalItem)
-        goalAdapter.notifyItemInserted(goalItemList.size - 1)
-        JsonUtil.writeToGoalJson(requireContext(), goalItemList)
-    }
+
 
     fun removeItem(position: Int) {
+        val goalItem = goalItemList[position]
         goalItemList.removeAt(position)
+        val doneGoalItem = goalItemList.find { it.name == goalItem.name }
+        if(doneGoalItem!=null){
+          goalItemList.remove(doneGoalItem)
+        }
         goalAdapter.notifyItemRemoved(position)
-        goalAdapter.updateList(goalItemList)
+//        goalAdapter.updateList(filteredGoalItems)
+//        goalAdapter.updateList(goalItemList)
         JsonUtil.writeToGoalJson(requireContext(), goalItemList)
+
     }
 
     private fun setupDotIndicators() {
