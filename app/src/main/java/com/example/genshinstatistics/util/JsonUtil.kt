@@ -124,11 +124,10 @@ object JsonUtil {
                 val listType = object : TypeToken<ArrayList<GoalItem>>() {}.type
                 val result: ArrayList<GoalItem>? = gson.fromJson(reader, listType)
 
-                // Check if the result is valid (not null and not empty)
                 if (result != null && result.isNotEmpty()) {
-                    result // Return the valid result
+                    result
                 } else {
-                    null // Return null if the list is empty or invalid
+                    null
                 }
             }
         } catch (e: IOException) {
