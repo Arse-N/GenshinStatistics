@@ -1,7 +1,6 @@
 package com.example.genshinstatistics.adapters
 
 import android.annotation.SuppressLint
-import android.nfc.NfcAdapter.OnTagRemovedListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +14,9 @@ import coil.request.CachePolicy
 import com.example.genshinstatistics.R
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.constants.ArchiveWeaponData
+import com.example.genshinstatistics.enums.GoalItemStatus
 import com.example.genshinstatistics.model.GoalItem
 import com.example.genshinstatistics.model.Item
-import com.example.genshinstatistics.ui.home.HomeFragment
 
 class GoalItemAdapter(
     private var goalItemsList: MutableList<GoalItem>,
@@ -39,7 +38,7 @@ class GoalItemAdapter(
         if (item != null) {
             with(holder) {
                 nameTextView.text = goalItem.name
-                ascTextView.text = goalItem.ascension
+                (goalItem.ascension + (goalItem.goalCount - 1)).also { ascTextView.text = it }
                 item.icon?.let {
                     iconImageView.load(it) {
                         crossfade(true)
@@ -47,9 +46,19 @@ class GoalItemAdapter(
                         diskCachePolicy(CachePolicy.ENABLED)
                     }
                 }
-
                 item.iconBgColor?.let {
                     iconBgCardView.setBackgroundResource(it)
+                }
+
+                if(goalItem.status == GoalItemStatus.DONE){
+                    (goalItem.ascension + (goalItem.obtained - 1)).also { ascTextView.text = it }
+                    removeButton.visibility = View.GONE
+                    goalCountHeader.text = "obtained: "
+                    goalCountValue.text = goalItem.obtained.toString()
+                }else{
+                    removeButton.visibility = View.VISIBLE
+                    goalCountHeader.text = "remaining: "
+                    goalCountValue.text = goalItem.remaining.toString()
                 }
             }
 
@@ -76,6 +85,8 @@ class GoalItemAdapter(
         val ascTextView: TextView = itemView.findViewById(R.id.asc_value)
         val iconImageView: ImageView = itemView.findViewById(R.id.item_img)
         val iconBgCardView: LinearLayout = itemView.findViewById(R.id.color_card)
+        val goalCountHeader: TextView = itemView.findViewById(R.id.item_count_header)
+        val goalCountValue: TextView = itemView.findViewById(R.id.item_count_value)
         val removeButton: ImageView = itemView.findViewById(R.id.remove_button)
     }
 

@@ -43,23 +43,76 @@
             android:id="@+id/text"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toTopOf="@+id/goals_layout"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="-5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/goals_layout"
             app:layout_constraintTop_toBottomOf="@+id/dotIndicators">
-        <TextView
-                android:id="@+id/asc_value"
-                android:text="Goals"
+
+        <LinearLayout
+                android:id="@+id/goals_tab"
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:layout_marginTop="1dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_goal_tab_bg_active"
+                android:gravity="center">
+            <TextView
+                    android:id="@+id/goal_value"
+                    android:text="Goals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/light_gold"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/done_tab"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="1dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/ic_goal_tab_bg_inactive"
+                android:gravity="center">
+            <TextView
+                    android:id="@+id/done_value"
+                    android:text="Done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/add_tab"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                style="@style/primaryTextColor"
-                android:layout_gravity="center"
-                android:ellipsize="end"
-                android:singleLine="true"/>
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:gravity="end">
+            <ImageView
+                    android:id="@+id/addButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    app:srcCompat="@drawable/ic_goal_add"/>
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
             android:id="@+id/goals_layout"
@@ -80,26 +133,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center">
-            <LinearLayout
-                    android:id="@+id/tabs_layout"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center">
-            <ImageView
-                    android:id="@+id/addButton"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="end"
-                    app:srcCompat="@drawable/ic_square_add"/>
-            </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/goal_items"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="15dp"
                     android:layout_marginBottom="15dp"/>
         </LinearLayout>
     </LinearLayout>

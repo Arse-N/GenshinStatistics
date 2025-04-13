@@ -26,11 +26,13 @@ import com.example.genshinstatistics.adapters.HistoryItemAdapter
 import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.constants.ArchiveWeaponData
 import com.example.genshinstatistics.databinding.FragmentHistoryBinding
+import com.example.genshinstatistics.enums.GoalItemStatus
 import com.example.genshinstatistics.enums.SortType
 import com.example.genshinstatistics.enums.WinRateType
 import com.example.genshinstatistics.enums.WishType
+import com.example.genshinstatistics.model.GoalItem
 import com.example.genshinstatistics.model.HistoryItem
-import com.example.genshinstatistics.util.BannerFetcher
+import com.example.genshinstatistics.services.GoalItemService
 import com.example.genshinstatistics.util.BaseUtil
 import com.example.genshinstatistics.util.JsonUtil
 import com.example.genshinstatistics.util.SorterUtil
@@ -44,6 +46,8 @@ class HistoryFragment : Fragment() {
     private lateinit var historyItemsList: ArrayList<HistoryItem>
     private lateinit var filteredHistoryItemsList: ArrayList<HistoryItem>
     private lateinit var searchedHistoryItemsList: ArrayList<HistoryItem>
+    private lateinit var goalItemsService: GoalItemService
+    private lateinit var goalItemList: ArrayList<GoalItem>
     private lateinit var selectedWishType: String
     private lateinit var historySearchBar: SearchView
     private var popupWindow: PopupWindow? = null
@@ -56,7 +60,8 @@ class HistoryFragment : Fragment() {
     ): View {
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
         historyItemsList = JsonUtil.readFromJson(requireContext()) ?: ArrayList()
-
+        goalItemList = JsonUtil.readFromGoalJson(requireContext()) ?: ArrayList()
+        goalItemsService = GoalItemService(historyItemsList, goalItemList, requireContext())
         historySearchBar = binding.historySearchBar
         historySearchBar.clearFocus()
         filteredHistoryItemsList =
@@ -203,7 +208,6 @@ class HistoryFragment : Fragment() {
             if (chosenDate.isNullOrEmpty()) {
                 chosenDate = BaseUtil.getFormattedDate()
             }
-
             if (isValid) {
                 historyItem.name = chosenItem
                 historyItem.winDate = chosenDate
@@ -212,10 +216,12 @@ class HistoryFragment : Fragment() {
                 historyItem.wishRateColor = chosenWishRate?.let { it1 -> BaseUtil.chooseColor(requireContext(), it1) }
                 historyItem.winDate = chosenDate
                 historyItem.wishType = chosenWishType
-                if(position == null)
+                if (position == null) {
                     addNewItem(historyItem)
-                else
+                    goalItemsService.updateItem(historyItem.name)
+                } else {
                     updateItem(position, historyItem)
+                }
                 dialog.dismiss();
             }
 
@@ -441,6 +447,7 @@ class HistoryFragment : Fragment() {
     ) {
         val newPosition = historyItemsList.indexOf(filteredHistoryItemsList[position])
         if (newPosition != -1) {
+            goalItemsService.removeItem(historyItemsList[newPosition].name)
             historyItemsList.removeAt(newPosition)
             filteredHistoryItemsList.removeAt(position)
             historyAdapter.notifyItemRemoved(position)

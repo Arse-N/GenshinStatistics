@@ -38,15 +38,16 @@
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/text_layout"
+                android:id="@+id/name_text_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:minWidth="150dp"
+                android:layout_weight="3"
                 android:orientation="horizontal">
             <TextView
                     android:id="@+id/name_value"
-                    android:text="Mavuika"
+                    android:text="Raiden Shogun"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
@@ -56,6 +57,13 @@
                     android:layout_gravity="center"
                     android:ellipsize="end"
             />
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/asc_text_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
             <TextView
                     android:id="@+id/asc_value"
                     android:text="C6"
@@ -75,14 +83,44 @@
                 android:orientation="vertical"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:gravity="center">
+                android:gravity="center_vertical">
 
             <ImageView
                     android:id="@+id/remove_button"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
+                    android:layout_marginTop="5dp"
                     android:layout_gravity="center"
                     app:srcCompat="@drawable/ic_remove"/>
+            <LinearLayout
+                    android:id="@+id/items_count_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                <TextView
+                        android:id="@+id/item_count_header"
+                        android:text="remaining: "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_gravity="center"
+                        android:ellipsize="end"
+                        android:singleLine="true"/>
+                <TextView
+                        android:id="@+id/item_count_value"
+                        android:text="7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/light_gold"
+                        android:layout_gravity="center"
+                        android:ellipsize="end"
+                        android:singleLine="true"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
