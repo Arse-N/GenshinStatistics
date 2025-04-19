@@ -91,7 +91,7 @@
                     android:layout_height="26dp"
                     android:layout_marginTop="5dp"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_remove"/>
+                    app:srcCompat="@drawable/ic_goal_remove"/>
             <LinearLayout
                     android:id="@+id/items_count_layout"
                     android:layout_width="match_parent"
