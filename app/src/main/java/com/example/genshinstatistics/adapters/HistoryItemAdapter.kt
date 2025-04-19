@@ -12,7 +12,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.NonNull
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -28,17 +27,17 @@ class HistoryItemAdapter(
     private val context: Context,
     private var historyItemsList: List<HistoryItem>,
     private var searchText: String = ""
-) : RecyclerView.Adapter<HistoryItemAdapter.ReminderViewHolder>() {
+) : RecyclerView.Adapter<HistoryItemAdapter.HistoryItemViewHolder>() {
 
 
     @NonNull
-    override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): ReminderViewHolder {
+    override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): HistoryItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.history_item, parent, false)
-        return ReminderViewHolder(view)
+        return HistoryItemViewHolder(view)
     }
 
     @SuppressLint("RecyclerView")
-    override fun onBindViewHolder(@NonNull holder: ReminderViewHolder, position: Int) {
+    override fun onBindViewHolder(@NonNull holder: HistoryItemViewHolder, position: Int) {
         val historyItem: HistoryItem = historyItemsList[position]
         val items = (ArchiveCharacterData.Characthers + ArchiveWeaponData.Weapons)
         val item: Item? = items.find { it.name == historyItem.name }
@@ -124,25 +123,11 @@ class HistoryItemAdapter(
                 startIndex + searchText.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
-//            spannable.setSpan(
-//                ForegroundColorSpan(Color.RED),
-//                startIndex,
-//                startIndex + searchText.length,
-//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-//            )
-//            spannable.setSpan(
-//                StyleSpan(Typeface.BOLD),
-//                startIndex,
-//                startIndex + searchText.length,
-//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-//            )
         }
         return spannable
     }
 
-    class ReminderViewHolder(@NonNull itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val recyclerItem: LinearLayout = itemView.findViewById(R.id.recycler_item)
-        val historyItem: ConstraintLayout = itemView.findViewById(R.id.history_item)
+    class HistoryItemViewHolder(@NonNull itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.name_value)
         val signImageView: ImageView = itemView.findViewById(R.id.sign_icon)
         val iconImageView: ImageView = itemView.findViewById(R.id.item_img)
