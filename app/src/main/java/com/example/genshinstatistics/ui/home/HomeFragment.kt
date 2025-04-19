@@ -54,6 +54,7 @@ class HomeFragment : Fragment() {
     private lateinit var historyItems: ArrayList<HistoryItem>
     private lateinit var filteredGoalItems: ArrayList<GoalItem>
     private lateinit var bannersData: List<BannerData>
+    private var chosenTab = false
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -201,7 +202,6 @@ class HomeFragment : Fragment() {
 
         dialog.setCanceledOnTouchOutside(false)
         dialogView.findViewById<View>(R.id.dialog_close).setOnClickListener {
-            goalAdapter.updateList(goalItemList)
             dialog.dismiss()
         }
 
@@ -218,7 +218,15 @@ class HomeFragment : Fragment() {
             if (isValid) {
                 val goalItem = GoalItem(BaseUtil.generateCode(), chosenItemName, chosenAscType, chosenGoalCount)
                 goalItemsService.createNewItem(goalItem)
-                goalAdapter.notifyItemInserted(goalItemList.size - 1)
+                goalItemList = JsonUtil.readFromGoalJson(requireContext()) ?: ArrayList()
+                filteredGoalItems = goalItemList.filter {
+                    if (!chosenTab) {
+                        it.status == GoalItemStatus.TODO
+                    } else {
+                        it.status == GoalItemStatus.DONE
+                    }
+                } as ArrayList<GoalItem>
+                goalAdapter.updateList(filteredGoalItems)
                 dialog.dismiss();
             }
 
@@ -275,19 +283,12 @@ class HomeFragment : Fragment() {
     }
 
 
-
-    fun removeItem(position: Int) {
-        val goalItem = goalItemList[position]
-        goalItemList.removeAt(position)
-        val doneGoalItem = goalItemList.find { it.name == goalItem.name }
-        if(doneGoalItem!=null){
-          goalItemList.remove(doneGoalItem)
-        }
-        goalAdapter.notifyItemRemoved(position)
-//        goalAdapter.updateList(filteredGoalItems)
-//        goalAdapter.updateList(goalItemList)
+    private fun removeItem(position: Int) {
+        val goalItem: GoalItem = filteredGoalItems[position]
+        goalItemList.remove(goalItem)
         JsonUtil.writeToGoalJson(requireContext(), goalItemList)
-
+        filteredGoalItems = goalItemList.filter { it.status == GoalItemStatus.TODO } as ArrayList<GoalItem>
+        goalAdapter.updateList(filteredGoalItems)
     }
 
     private fun setupDotIndicators() {

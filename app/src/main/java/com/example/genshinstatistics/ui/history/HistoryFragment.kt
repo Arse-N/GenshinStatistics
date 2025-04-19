@@ -401,20 +401,13 @@ class HistoryFragment : Fragment() {
     private fun addNewItem(historyItem: HistoryItem) {
         historyItemsList.add(historyItem)
         val newFilteredList = SorterUtil.sortAndFilter(historyItemsList, SortType.WISH_TYPE, false, selectedWishType)
-        val newIndex = newFilteredList.indexOf(historyItem)
         filteredHistoryItemsList.clear()
         filteredHistoryItemsList.addAll(newFilteredList)
-
-        if (newIndex != -1) {
-            historyAdapter.notifyItemInserted(newIndex)
-        } else {
-            historyAdapter.updateList(filteredHistoryItemsList)
-        }
-
         JsonUtil.writeToJson(requireContext(), historyItemsList)
         if (filteredHistoryItemsList.size > 1) {
             historyAdapter.notifyItemChanged(filteredHistoryItemsList.size - 2)
         }
+        historyAdapter.updateList(filteredHistoryItemsList)
     }
 
 
