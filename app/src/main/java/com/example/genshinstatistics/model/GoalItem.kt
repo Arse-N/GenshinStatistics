@@ -10,6 +10,7 @@ data class GoalItem(
     var goalCount: Int = 0,
     var type: ItemType = ItemType.CHARACTER,
     var status: GoalItemStatus = GoalItemStatus.TODO,
+    var obtainedDate: String = "",
     var obtained: Int = 0,
     var remaining: Int = 0,
     var order: Int? = null,
