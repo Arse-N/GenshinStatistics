@@ -108,12 +108,12 @@
             </LinearLayout>
             <TextView
                     android:id="@+id/item_selector_error"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:textColor="@color/white"
-                    android:textAlignment="textStart"
-                    android:layout_marginStart="150dp"
-                    android:layout_marginEnd="30dp"
+                    android:textAlignment="textEnd"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginEnd="45dp"
                     android:text="@string/please_select_item"/>
             <LinearLayout
                     android:id="@+id/asc_layout"

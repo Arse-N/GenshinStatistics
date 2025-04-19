@@ -54,12 +54,11 @@ class GoalItemAdapter(
                     (goalItem.ascension + (goalItem.obtained - 1)).also { ascTextView.text = it }
                     removeButton.setImageResource(R.drawable.ic_goal_done)
                     removeButton.isClickable = false
-                    goalCountHeader.visibility = View.GONE
+                    goalCountHeader.text = goalItem.obtainedDate
                     goalCountValue.visibility = View.GONE
                 }else{
                     removeButton.setImageResource(R.drawable.ic_goal_remove)
                     removeButton.isClickable = true
-                    goalCountHeader.visibility = View.VISIBLE
                     goalCountValue.visibility = View.VISIBLE
                     goalCountHeader.text = "remaining: "
                     goalCountValue.text = goalItem.remaining.toString()

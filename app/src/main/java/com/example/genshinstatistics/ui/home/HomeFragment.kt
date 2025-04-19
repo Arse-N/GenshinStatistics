@@ -207,16 +207,21 @@ class HomeFragment : Fragment() {
 
         dialogView.findViewById<View>(R.id.dialog_done).setOnClickListener {
             var isValid = true
-
+            val repeatedItem = goalItemList.find { it.name == chosenItemName }
             if (chosenItemName.isEmpty()) {
                 errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.rarity_v5))
+                errorText.text = "Please Select Item!"
+                isValid = false
+            } else if (repeatedItem != null) {
+                errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.rarity_v5))
+                errorText.text = "You already have a goal for this Item!"
                 isValid = false
             } else {
                 errorText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             }
 
             if (isValid) {
-                val goalItem = GoalItem(BaseUtil.generateCode(), chosenItemName, chosenAscType, chosenGoalCount)
+                val goalItem = GoalItem(BaseUtil.generateCode(), chosenItemName, chosenAscType, chosenGoalCount, chosenItemType)
                 goalItemsService.createNewItem(goalItem)
                 goalItemList = JsonUtil.readFromGoalJson(requireContext()) ?: ArrayList()
                 filteredGoalItems = goalItemList.filter {
@@ -226,7 +231,8 @@ class HomeFragment : Fragment() {
                         it.status == GoalItemStatus.DONE
                     }
                 } as ArrayList<GoalItem>
-                goalAdapter.updateList(filteredGoalItems)
+//                goalAdapter.updateList(filteredGoalItems)
+                setupRecyclerView(filteredGoalItems)
                 dialog.dismiss();
             }
 
