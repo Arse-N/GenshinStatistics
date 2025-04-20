@@ -2,6 +2,7 @@ package com.example.genshinstatistics.ui.statistic
 
 import android.R
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,15 @@ import com.example.genshinstatistics.enums.StatisticType
 import com.example.genshinstatistics.enums.WinRateType
 import com.example.genshinstatistics.enums.WishType
 import com.example.genshinstatistics.model.HistoryItem
+import com.example.genshinstatistics.services.GoalItemService
+import com.example.genshinstatistics.services.StatisticsService
 import com.example.genshinstatistics.util.JsonUtil
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 
 class StatisticFragment : Fragment() {
 
@@ -27,7 +36,7 @@ class StatisticFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var ownedItemGridAdapter: OwnedItemGridAdapter
     private lateinit var historyItemsList: ArrayList<HistoryItem>
-    private lateinit var filteredHistoryItemsList: ArrayList<HistoryItem>
+    private lateinit var statisticsService: StatisticsService
     private lateinit var statisticTypeSelector: Spinner
     private lateinit var selectedStatisticType: String
     private lateinit var gridView: LinearLayout
@@ -44,6 +53,7 @@ class StatisticFragment : Fragment() {
         statisticTypeSelector = binding.statisticTypeSelector
         gridView = binding.gridLayout
         statisticsView = binding.statisticsLayout
+        statisticsService = StatisticsService(historyItemsList, requireContext())
         setupStatisticTypeSpinner(statisticTypeSelector)
         return root
     }
@@ -108,9 +118,6 @@ class StatisticFragment : Fragment() {
         val primogems: TextView = binding.primogemsValue
         val wishPulls: TextView = binding.wishPullsValue
         val standardPulls: TextView = binding.standardPullsValue
-        val fifty50Wins: TextView = binding.fifty50WinsValue
-        val fifty50WinsStrike: TextView = binding.fifty50WinsStrikeValue
-        val fifty50LoseStrike: TextView = binding.fifty50LoseStrikeValue
 
         val (standardSum, otherWishSum, primogemsSum) = historyItemsList.fold(Triple(0, 0, 0)) { sums, item ->
             Triple(
@@ -119,21 +126,45 @@ class StatisticFragment : Fragment() {
                 if (item.wishType != WishType.STANDARD_WISH.displayName) sums.third + (item.wishRate?.times(160)!!) else sums.third
             )
         }
-
-        val (win50Count, win50Streak, lose50Streak) = historyItemsList.fold(Triple(0, 0, 0)) { streaks, item ->
-            Triple(
-                if (item.winRate == WinRateType.FIFTY_FIFTY_WIN.displayName) streaks.first + 1 else streaks.first,
-                if (item.winRate == WinRateType.FIFTY_FIFTY_WIN.displayName) streaks.second + 1 else 0,
-                if (item.winRate == WinRateType.FIFTY_FIFTY_LOSE.displayName) streaks.third + 1 else 0
-            )
-        }
-
         standardPulls.text = standardSum.toString()
         wishPulls.text = otherWishSum.toString()
         primogems.text = primogemsSum.toString()
-        fifty50Wins.text = win50Count.toString()
-        fifty50WinsStrike.text = win50Streak.toString()
-        fifty50LoseStrike.text = lose50Streak.toString()
+        setupWinsPieChart()
+
+    }
+
+    private fun setupWinsPieChart(){
+        val winsPieChart: PieChart = binding.pieChart
+        val pieChartData: List<PieEntry> = statisticsService.getPieChartData();
+        val dataSet = PieDataSet(pieChartData, "")
+        dataSet.colors = listOf(
+            Color.parseColor("#4CAF50"), // Green
+            Color.parseColor("#F44336")  // Red
+        )
+        dataSet.valueTextColor = Color.WHITE
+        dataSet.valueTextSize = 12f
+        val data = PieData(dataSet)
+        winsPieChart.data = data
+        dataSet.setDrawValues(true)
+        winsPieChart.setDrawEntryLabels(false)
+        winsPieChart.description.isEnabled = false
+        winsPieChart.centerText = ""
+        winsPieChart.setEntryLabelColor(Color.BLACK)
+        winsPieChart.extraBottomOffset = 10f
+
+        winsPieChart.animateY(1000)
+        winsPieChart.invalidate()
+        winsPieChart.holeRadius = 20f
+
+        val legend = winsPieChart.legend
+        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+        legend.orientation = Legend.LegendOrientation.VERTICAL
+        legend.setDrawInside(true)
+        legend.textSize = 11f
+        legend.form = Legend.LegendForm.SQUARE
+        legend.xEntrySpace = 5f
+        legend.yOffset = 10f
     }
 
 
