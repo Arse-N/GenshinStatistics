@@ -41,6 +41,7 @@ class StatisticFragment : Fragment() {
     private lateinit var selectedStatisticType: String
     private lateinit var gridView: LinearLayout
     private lateinit var statisticsView: ConstraintLayout
+    private lateinit var chartView: ConstraintLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +54,7 @@ class StatisticFragment : Fragment() {
         statisticTypeSelector = binding.statisticTypeSelector
         gridView = binding.gridLayout
         statisticsView = binding.statisticsLayout
+        chartView = binding.chartsLayout
         statisticsService = StatisticsService(historyItemsList, requireContext())
         setupStatisticTypeSpinner(statisticTypeSelector)
         return root
@@ -78,6 +80,7 @@ class StatisticFragment : Fragment() {
                 selectedStatisticType = statisticTypes[position].displayName
                 when(selectedStatisticType){
                     StatisticType.WISH_STATISTICS.displayName -> showStatistics()
+                    StatisticType.WISH_CHARTS.displayName -> showCharts()
                     StatisticType.OWNED_CHARACTERS.displayName -> showOwnedItems(ItemType.CHARACTER)
                     StatisticType.OWNED_WEAPON.displayName -> showOwnedItems(ItemType.WEAPON)
                 }
@@ -91,6 +94,7 @@ class StatisticFragment : Fragment() {
 
     private fun showOwnedItems(itemType: ItemType) {
         statisticsView.visibility = View.GONE
+        chartView.visibility = View.GONE
         gridView.visibility = View.VISIBLE
 
         val groupedItems = historyItemsList
@@ -133,16 +137,25 @@ class StatisticFragment : Fragment() {
 
     }
 
+    private fun showCharts() {
+        gridView.visibility = View.GONE
+        statisticsView.visibility = View.GONE
+        chartView.visibility = View.VISIBLE
+
+        setupWinsPieChart()
+
+    }
+
     private fun setupWinsPieChart(){
         val winsPieChart: PieChart = binding.pieChart
         val pieChartData: List<PieEntry> = statisticsService.getPieChartData();
         val dataSet = PieDataSet(pieChartData, "")
         dataSet.colors = listOf(
-            Color.parseColor("#4CAF50"), // Green
-            Color.parseColor("#F44336")  // Red
+            Color.parseColor("#454C5C"),  // gold
+            Color.parseColor("#CEAB81"), // dark blue
         )
         dataSet.valueTextColor = Color.WHITE
-        dataSet.valueTextSize = 12f
+        dataSet.valueTextSize = 10f
         val data = PieData(dataSet)
         winsPieChart.data = data
         dataSet.setDrawValues(true)
@@ -150,21 +163,20 @@ class StatisticFragment : Fragment() {
         winsPieChart.description.isEnabled = false
         winsPieChart.centerText = ""
         winsPieChart.setEntryLabelColor(Color.BLACK)
-        winsPieChart.extraBottomOffset = 10f
-
+        winsPieChart.extraBottomOffset = 6f
         winsPieChart.animateY(1000)
         winsPieChart.invalidate()
-        winsPieChart.holeRadius = 20f
-
-        val legend = winsPieChart.legend
-        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
-        legend.orientation = Legend.LegendOrientation.VERTICAL
-        legend.setDrawInside(true)
-        legend.textSize = 11f
-        legend.form = Legend.LegendForm.SQUARE
-        legend.xEntrySpace = 5f
-        legend.yOffset = 10f
+        winsPieChart.holeRadius = 50f
+        winsPieChart.legend.setDrawInside(true)
+//        val legend = winsPieChart.legend
+//        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+//        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+//        legend.orientation = Legend.LegendOrientation.VERTICAL
+//        legend.setDrawInside(true)
+//        legend.textSize = 11f
+//        legend.form = Legend.LegendForm.SQUARE
+//        legend.xEntrySpace = 5f
+//        legend.yOffset = 10f
     }
 
 

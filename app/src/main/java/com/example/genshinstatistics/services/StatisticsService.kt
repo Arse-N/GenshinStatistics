@@ -14,8 +14,8 @@ fun getPieChartData(): List<PieEntry>{
     val wins: Float = historyItems.count { it.winRate == WinRateType.FIFTY_FIFTY_WIN.displayName }.toFloat()
     val loses: Float = historyItems.count { it.winRate == WinRateType.FIFTY_FIFTY_LOSE.displayName }.toFloat()
     return listOf(
-        PieEntry(wins, "wins"),
         PieEntry(loses, "loses"),
+        PieEntry(wins, "wins"),
     )
 }
 
