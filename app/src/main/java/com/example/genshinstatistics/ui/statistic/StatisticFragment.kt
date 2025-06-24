@@ -3,11 +3,13 @@ package com.example.genshinstatistics.ui.statistic
 import android.R
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.example.genshinstatistics.adapters.OwnedItemGridAdapter
@@ -15,19 +17,23 @@ import com.example.genshinstatistics.constants.ArchiveCharacterData
 import com.example.genshinstatistics.constants.ArchiveWeaponData
 import com.example.genshinstatistics.databinding.FragmentStatisticBinding
 import com.example.genshinstatistics.dto.ItemCount
-import com.example.genshinstatistics.enums.ItemType
-import com.example.genshinstatistics.enums.StatisticType
-import com.example.genshinstatistics.enums.WinRateType
-import com.example.genshinstatistics.enums.WishType
+import com.example.genshinstatistics.enums.*
 import com.example.genshinstatistics.model.HistoryItem
 import com.example.genshinstatistics.services.GoalItemService
 import com.example.genshinstatistics.services.StatisticsService
 import com.example.genshinstatistics.util.JsonUtil
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 
 class StatisticFragment : Fragment() {
@@ -75,6 +81,7 @@ class StatisticFragment : Fragment() {
             statisticTypeSpinner.performClick()
         }
         statisticTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            @RequiresApi(Build.VERSION_CODES.O)
             @SuppressLint("NotifyDataSetChanged")
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedStatisticType = statisticTypes[position].displayName
@@ -117,11 +124,12 @@ class StatisticFragment : Fragment() {
 
     private fun showStatistics() {
         gridView.visibility = View.GONE
+        chartView.visibility = View.GONE
         statisticsView.visibility = View.VISIBLE
 
-        val primogems: TextView = binding.primogemsValue
-        val wishPulls: TextView = binding.wishPullsValue
-        val standardPulls: TextView = binding.standardPullsValue
+//        val primogems: TextView = binding.primogemsValue
+        val wishPulls: TextView = binding.totalPullsValue
+//        val standardPulls: TextView = binding.standardPullsValue
 
         val (standardSum, otherWishSum, primogemsSum) = historyItemsList.fold(Triple(0, 0, 0)) { sums, item ->
             Triple(
@@ -130,19 +138,21 @@ class StatisticFragment : Fragment() {
                 if (item.wishType != WishType.STANDARD_WISH.displayName) sums.third + (item.wishRate?.times(160)!!) else sums.third
             )
         }
-        standardPulls.text = standardSum.toString()
+//        standardPulls.text = standardSum.toString()
         wishPulls.text = otherWishSum.toString()
-        primogems.text = primogemsSum.toString()
+//        primogems.text = primogemsSum.toString()
         setupWinsPieChart()
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showCharts() {
         gridView.visibility = View.GONE
         statisticsView.visibility = View.GONE
         chartView.visibility = View.VISIBLE
 
         setupWinsPieChart()
+        setupBigChart()
 
     }
 
@@ -178,6 +188,47 @@ class StatisticFragment : Fragment() {
 //        legend.xEntrySpace = 5f
 //        legend.yOffset = 10f
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupBigChart() {
+        val bigChart: BarChart = binding.barChart
+        val (bigChartData, xLabels) = statisticsService.getBigChartData(ChartFilteringType.WEEKLY)
+
+        val dataSet = BarDataSet(bigChartData, "")
+        dataSet.colors = listOf(
+            Color.parseColor("#CEAB81"),
+            Color.parseColor("#454C5C")
+        )
+        dataSet.setDrawValues(true)
+        dataSet.valueTextColor = Color.RED
+        dataSet.valueTextSize = 10f
+
+        dataSet.valueFormatter = object : ValueFormatter() {
+            override fun getBarLabel(barEntry: BarEntry?): String {
+                val index = barEntry?.x?.toInt() ?: 0
+                return historyItemsList.getOrNull(index)?.name ?: ""
+            }
+        }
+
+        val data = BarData(dataSet)
+        data.barWidth = 0.9f
+
+        bigChart.data = data
+        bigChart.setFitBars(true)
+        bigChart.description.isEnabled = false
+        bigChart.extraBottomOffset = 6f
+        bigChart.animateY(1000)
+        bigChart.invalidate()
+        bigChart.legend.isEnabled = false
+
+        // 📅 Show winDate on X-axis
+        val xAxis = bigChart.xAxis
+        xAxis.valueFormatter = IndexAxisValueFormatter(xLabels)
+        xAxis.granularity = 1f
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+    }
+
+
 
 
 
