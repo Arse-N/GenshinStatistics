@@ -632,6 +632,30 @@ object ArchiveCharacterData {
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 53,
+                name = "Escoffier",
+                region = Region.FONTAINE,
+                iconBgColor = R.drawable.ic_cryo_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_escoffier.png",
+                birthdate = "06/08",
+                itemTypeIcon = R.drawable.ic_element_cryo,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 54,
+                name = "Skirk",
+                region = Region.UNKNOWN,
+                iconBgColor = R.drawable.ic_cryo_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_skirk.png",
+                birthdate = "11/05",
+                itemTypeIcon = R.drawable.ic_element_cryo,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
             )
         )
     }
