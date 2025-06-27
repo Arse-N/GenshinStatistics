@@ -62,9 +62,9 @@ fun getPieChartData(): List<PieEntry>{
         return Pair(chartEntries, xLabels)
     }
 
-    fun getBannerStatistics(bannerType: WishType, historyItems: ArrayList<HistoryItem>): HashMap<String, Int> {
+    fun getBannerStatistics(bannerType: String, historyItems: ArrayList<HistoryItem>): HashMap<String, Int> {
         val filteredHistoryItems: List<HistoryItem> =
-            historyItems.filter { h -> h.wishType.equals(bannerType.displayName) }
+            historyItems.filter { h -> h.wishType.equals(bannerType) }
         val totalPulls = filteredHistoryItems.sumOf { it.wishRate ?: 0 }
         val pityCount = 0
         val fifty50Wins = filteredHistoryItems.count { it.winRate.equals(WinRateType.FIFTY_FIFTY_WIN.displayName) }
@@ -115,6 +115,9 @@ fun getPieChartData(): List<PieEntry>{
         }.sortedBy { it.winDate?.let { it1 -> dateFormat.parse(it1) } }.reversed()
 
         var currentStreak = 0
+        if(sorted.isEmpty()){
+            return currentStreak
+        }
         val target:String? = sorted[0].winRate
         for (item in sorted) {
             if (item.winRate.equals(target)) {
@@ -127,13 +130,15 @@ fun getPieChartData(): List<PieEntry>{
         return currentStreak;
     }
 
-    fun getLastPullWinRate(bannerType: WishType, historyItems: List<HistoryItem>): String? {
+    fun getLastPullWinRate(bannerType: String, historyItems: List<HistoryItem>): String? {
         val dateFormat = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
 
         val sorted = historyItems.filter {
-            it.wishType.equals(bannerType.displayName) and (it.winRate.equals(WinRateType.FIFTY_FIFTY_WIN.displayName) or it.winRate.equals(WinRateType.FIFTY_FIFTY_LOSE.displayName))
+            it.wishType.equals(bannerType) and (it.winRate.equals(WinRateType.FIFTY_FIFTY_WIN.displayName) or it.winRate.equals(WinRateType.FIFTY_FIFTY_LOSE.displayName))
         }.sortedBy { it.winDate?.let { it1 -> dateFormat.parse(it1) } }.reversed()
-
+        if (sorted.isEmpty()){
+            return WinRateType.FIFTY_FIFTY_WIN.displayName
+        }
         val target:String? = sorted[0].winRate
 
 

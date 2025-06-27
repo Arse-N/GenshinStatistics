@@ -3,6 +3,7 @@ package com.example.genshinstatistics.ui.statistic
 import android.R
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -41,6 +42,7 @@ class StatisticFragment : Fragment() {
     private lateinit var gridView: LinearLayout
     private lateinit var statisticsView: ConstraintLayout
     private lateinit var chartView: ConstraintLayout
+    private var selectedWishType: WishType = WishType.CHARACTER_WISH
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,7 +81,10 @@ class StatisticFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedStatisticType = statisticTypes[position].displayName
                 when(selectedStatisticType){
-                    StatisticType.WISH_STATISTICS.displayName -> showStatistics()
+                    StatisticType.WISH_STATISTICS.displayName -> {
+                        showStatistics()
+                        setupToggleButtons()
+                    }
                     StatisticType.WISH_CHARTS.displayName -> showCharts()
                     StatisticType.OWNED_CHARACTERS.displayName -> showOwnedItems(ItemType.CHARACTER)
                     StatisticType.OWNED_WEAPON.displayName -> showOwnedItems(ItemType.WEAPON)
@@ -119,9 +124,8 @@ class StatisticFragment : Fragment() {
         gridView.visibility = View.GONE
         chartView.visibility = View.GONE
         statisticsView.visibility = View.VISIBLE
-        var bannerType = WishType.CHARACTER_WISH
-        val statisticsData = statisticsService.getBannerStatistics(bannerType, historyItemsList)
 
+        val statisticsData = statisticsService.getBannerStatistics(selectedWishType.displayName, historyItemsList)
         binding.totalPullsValue.text = statisticsData["totalPulls"].toString()
         binding.pityCountValue.text = statisticsData["pityCount"].toString()
         binding.fifty50WinsValue.text = statisticsData["fifty50Wins"].toString()
@@ -129,18 +133,60 @@ class StatisticFragment : Fragment() {
         binding.fifty50WinsStrikeValue.text = statisticsData["fifty50WinsRecordStrike"].toString()
         binding.fifty50LosesStrikeValue.text = statisticsData["fifty50LosesRecordStrike"].toString()
         binding.fifty50LosesWinsStrikeCurrentValue.text = statisticsData["currentStrike"].toString()
-        val currentStrikeType = statisticsService.getLastPullWinRate(bannerType, historyItemsList)
+
+        val currentStrikeType = statisticsService.getLastPullWinRate(selectedWishType.displayName, historyItemsList)
         if (currentStrikeType == WinRateType.FIFTY_FIFTY_WIN.displayName) {
             binding.fifty50LosesWinsStrikeCurrentTitle.text = "Ongoing 50/50 wins strike:"
-            binding.fifty50LosesWinsStrikeCurrentValue.setTextColor(ContextCompat.getColor(requireContext(), R.color.holo_green_dark))
+            binding.fifty50LosesWinsStrikeCurrentValue.setTypeface(null, Typeface.BOLD)
         } else {
             binding.fifty50LosesWinsStrikeCurrentTitle.text = "Ongoing 50/50 Loses strike:"
-            binding.fifty50LosesWinsStrikeCurrentValue.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.holo_red_dark)
-            )
+            binding.fifty50LosesWinsStrikeCurrentValue.setTypeface(null, Typeface.ITALIC)
+        }
+    }
+
+
+    private fun setupToggleButtons() {
+        val characterButton = binding.character
+        val standardButton = binding.standard
+        val chronicalButton = binding.chronical
+        val weaponButton = binding.weapon
+
+        val buttonMap = mapOf(
+            characterButton to WishType.CHARACTER_WISH,
+            weaponButton to WishType.WEAPON_WISH,
+            standardButton to WishType.STANDARD_WISH,
+            chronicalButton to WishType.CHRONICAL_WISH
+        )
+
+        val buttons = buttonMap.keys
+
+        fun applyTextStyle(selectedButton: Button) {
+            for (b in buttons) {
+                b.isEnabled = true
+                b.setTypeface(null, Typeface.NORMAL)
+            }
+
+            selectedButton.isEnabled = false
+            selectedButton.setTypeface(null, Typeface.BOLD)
         }
 
+        // Set default selected (Character)
+        applyTextStyle(characterButton)
+        selectedWishType = WishType.CHARACTER_WISH
+
+        // Set click listeners
+        for ((button, wishType) in buttonMap) {
+            button.setOnClickListener {
+                applyTextStyle(button)
+                selectedWishType = wishType
+                showStatistics() // Refresh statistics when a new type is selected
+            }
+        }
     }
+
+
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showCharts() {
