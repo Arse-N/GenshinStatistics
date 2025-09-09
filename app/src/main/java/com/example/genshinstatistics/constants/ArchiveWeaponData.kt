@@ -623,7 +623,62 @@ object ArchiveWeaponData {
                 rarity = 5,
                 rank = 0,
                 type = ItemType.WEAPON
-            )
+            ),
+            Item(
+                id = 57,
+                name = "Symphonist of Scents",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/ic_symphonist_of_scents.webp",
+                itemTypeIcon = R.drawable.ic_polearm,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 58,
+                name = "Azurelight",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/ic_azurelight.webp",
+                itemTypeIcon = R.drawable.ic_sword,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 59,
+                name = "Fractured Halo",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/ic_fractured_halo.webp",
+                itemTypeIcon = R.drawable.ic_polearm,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 60,
+                name = "Nightweaver's Looking Glass",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/ic_nightweaver_27s_looking_glass.webp",
+                itemTypeIcon = R.drawable.ic_catalyst,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 61,
+                name = "Bloodsoaked Ruins",
+                weaponType = WeaponType.POLEARM,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/ic_bloodsoaked_ruins.webp",
+                itemTypeIcon = R.drawable.ic_polearm,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
         )
     }
 }

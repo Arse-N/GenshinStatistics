@@ -656,6 +656,42 @@ object ArchiveCharacterData {
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 55,
+                name = "Ineffa",
+                region = Region.NOD_KRAI,
+                iconBgColor = R.drawable.ic_electro_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_ineffa.webp",
+                birthdate = "04/02",
+                itemTypeIcon = R.drawable.ic_element_electro,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 56,
+                name = "Lauma",
+                region = Region.NOD_KRAI,
+                iconBgColor = R.drawable.ic_dendro_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_lauma.webp",
+                birthdate = "03/01",
+                itemTypeIcon = R.drawable.ic_element_dendro,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 57,
+                name = "Kyryll Chudomirovich Flins",
+                region = Region.NOD_KRAI,
+                iconBgColor = R.drawable.ic_electro_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_flins.webp",
+                birthdate = "11/05",
+                itemTypeIcon = R.drawable.ic_element_electro,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
             )
         )
     }
