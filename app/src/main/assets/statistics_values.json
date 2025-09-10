@@ -3,5 +3,9 @@
   "wish_pulls": 0,
   "standard_pulls": 0,
   "50_50_win_strike": 0,
-  "50_50_lose_strike": 0
+  "50_50_lose_strike": 0,
+  "pity_character": 0,
+  "pity_standard": 0,
+  "pity_chronical": 0,
+  "pity_weapon": 0
 }

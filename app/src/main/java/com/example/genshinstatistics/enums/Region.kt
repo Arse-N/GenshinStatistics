@@ -7,6 +7,7 @@ enum class Region(val displayName: String) {
     SUMERU("Sumeru"),
     FONTAINE("Fontaine"),
     NATLAN("Natlan"),
+    NOD_KRAI("Nod Krai"),
     SNEZHNAYA("Snezhnaya"),
     UNKNOWN("Unknown")
 }
