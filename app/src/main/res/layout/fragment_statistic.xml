@@ -254,7 +254,7 @@
                     android:orientation="horizontal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/wish_pulls"
+                    android:id="@+id/pity_count"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/ic_statistic_item_bg_half_size"

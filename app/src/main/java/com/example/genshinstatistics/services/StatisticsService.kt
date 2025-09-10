@@ -6,7 +6,9 @@ import androidx.annotation.RequiresApi
 import com.example.genshinstatistics.enums.ChartFilteringType
 import com.example.genshinstatistics.enums.WinRateType
 import com.example.genshinstatistics.enums.WishType
+import com.example.genshinstatistics.model.BannerStatistics
 import com.example.genshinstatistics.model.HistoryItem
+import com.example.genshinstatistics.util.JsonUtil
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import java.text.SimpleDateFormat
@@ -20,14 +22,14 @@ class StatisticsService(
     var context: Context,
 ) {
 
-fun getPieChartData(): List<PieEntry>{
-    val wins: Float = historyItems.count { it.winRate == WinRateType.FIFTY_FIFTY_WIN.displayName }.toFloat()
-    val loses: Float = historyItems.count { it.winRate == WinRateType.FIFTY_FIFTY_LOSE.displayName }.toFloat()
-    return listOf(
-        PieEntry(loses, "loses"),
-        PieEntry(wins, "wins"),
-    )
-}
+    fun getPieChartData(): List<PieEntry> {
+        val wins: Float = historyItems.count { it.winRate == WinRateType.FIFTY_FIFTY_WIN.displayName }.toFloat()
+        val loses: Float = historyItems.count { it.winRate == WinRateType.FIFTY_FIFTY_LOSE.displayName }.toFloat()
+        return listOf(
+            PieEntry(loses, "loses"),
+            PieEntry(wins, "wins"),
+        )
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getBigChartData(filter: ChartFilteringType): Pair<List<BarEntry>, List<String>> {
@@ -37,16 +39,10 @@ fun getPieChartData(): List<PieEntry>{
         var end = LocalDate.now()
         var start = end.with(DayOfWeek.MONDAY)
         var sortedHistoryItem = when (filter) {
-            ChartFilteringType.WEEKLY -> {
-                start = end.with(DayOfWeek.MONDAY)
-                end = LocalDate.now()
-                historyItems.sortedBy {
-                    LocalDate.parse(it.winDate, formatter) <= end && LocalDate.parse(
-                        it.winDate,
-                        formatter
-                    ) >= start
-                }
+            ChartFilteringType.WEEKLY -> historyItems.sortedBy {
+                LocalDate.parse(it.winDate, formatter) <= end && LocalDate.parse(it.winDate, formatter) >= start
             }
+
             ChartFilteringType.MONTHLY -> historyItems.sortedBy { it.winDate }
             ChartFilteringType.YEARLY -> historyItems.sortedBy { it.winDate }
             else -> historyItems.sortedBy { it.winDate }
@@ -62,87 +58,70 @@ fun getPieChartData(): List<PieEntry>{
         return Pair(chartEntries, xLabels)
     }
 
-    fun getBannerStatistics(bannerType: String, historyItems: ArrayList<HistoryItem>): HashMap<String, Int> {
-        val filteredHistoryItems: List<HistoryItem> =
-            historyItems.filter { h -> h.wishType.equals(bannerType) }
-        val totalPulls = filteredHistoryItems.sumOf { it.wishRate ?: 0 }
-        val pityCount = 0
-        val fifty50Wins = filteredHistoryItems.count { it.winRate.equals(WinRateType.FIFTY_FIFTY_WIN.displayName) }
-        val fifty50Loses = filteredHistoryItems.count { it.winRate.equals(WinRateType.FIFTY_FIFTY_LOSE.displayName) }
-        val fifty50WinsRecordStrike = getRecordStrike(WinRateType.FIFTY_FIFTY_WIN, filteredHistoryItems)
-        val fifty50LosesRecordStrike = getRecordStrike(WinRateType.FIFTY_FIFTY_LOSE, filteredHistoryItems)
-        val currentStrike = getCurrentStrike(filteredHistoryItems)
-        val statisticsData: HashMap<String, Int> = mapOf(
-            "totalPulls" to totalPulls,
-            "pityCount" to pityCount,
-            "fifty50Wins" to fifty50Wins,
-            "fifty50Loses" to fifty50Loses,
-            "fifty50WinsRecordStrike" to fifty50WinsRecordStrike,
-            "fifty50LosesRecordStrike" to fifty50LosesRecordStrike,
-            "fifty50LosesRecordStrike" to fifty50LosesRecordStrike,
-            "currentStrike" to currentStrike,
-        ) as HashMap<String, Int>
-        return statisticsData
+    fun getBannerStatistics(bannerType: String, historyItems: ArrayList<HistoryItem>): BannerStatistics {
+        val filtered = historyItems.filter { it.wishType == bannerType }
+
+        val savedPity = JsonUtil.readPityJson(context)
+            ?.firstOrNull { it.type == bannerType }
+            ?.pityCount ?: 0
+
+        val totalPulls = filtered.sumOf { it.wishRate ?: 0 }
+        val fifty50Wins = filtered.count { it.winRate == WinRateType.FIFTY_FIFTY_WIN.displayName }
+        val fifty50Loses = filtered.count { it.winRate == WinRateType.FIFTY_FIFTY_LOSE.displayName }
+        val fifty50WinsRecordStrike = getRecordStrike(WinRateType.FIFTY_FIFTY_WIN, filtered)
+        val fifty50LosesRecordStrike = getRecordStrike(WinRateType.FIFTY_FIFTY_LOSE, filtered)
+        val currentStrike = getCurrentStrike(filtered)
+
+        return BannerStatistics(
+            totalPulls + savedPity,
+            savedPity,
+            fifty50Wins,
+            fifty50Loses,
+            fifty50WinsRecordStrike,
+            fifty50LosesRecordStrike,
+            currentStrike
+        )
     }
+
 
     private fun getRecordStrike(target: WinRateType, historyItems: List<HistoryItem>): Int {
         val dateFormat = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
-
         val sorted = historyItems.filter {
-            it.winRate.equals(WinRateType.FIFTY_FIFTY_WIN.displayName) or it.winRate.equals(WinRateType.FIFTY_FIFTY_LOSE.displayName)
-        }.sortedBy { it.winDate?.let { it1 -> dateFormat.parse(it1) } }
+            it.winRate == WinRateType.FIFTY_FIFTY_WIN.displayName || it.winRate == WinRateType.FIFTY_FIFTY_LOSE.displayName
+        }.sortedBy { it.winDate?.let { d -> dateFormat.parse(d) } }
 
         var maxStreak = 0
         var currentStreak = 0
-
         for (item in sorted) {
-            if (item.winRate.equals(target.displayName)) {
+            if (item.winRate == target.displayName) {
                 currentStreak++
                 maxStreak = maxOf(maxStreak, currentStreak)
-            } else {
-                currentStreak = 0
-            }
+            } else currentStreak = 0
         }
-
         return maxStreak
     }
 
     private fun getCurrentStrike(historyItems: List<HistoryItem>): Int {
         val dateFormat = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
-
         val sorted = historyItems.filter {
-            it.winRate.equals(WinRateType.FIFTY_FIFTY_WIN.displayName) or it.winRate.equals(WinRateType.FIFTY_FIFTY_LOSE.displayName)
-        }.sortedBy { it.winDate?.let { it1 -> dateFormat.parse(it1) } }.reversed()
+            it.winRate == WinRateType.FIFTY_FIFTY_WIN.displayName || it.winRate == WinRateType.FIFTY_FIFTY_LOSE.displayName
+        }.sortedBy { it.winDate?.let { d -> dateFormat.parse(d) } }.reversed()
 
+        if (sorted.isEmpty()) return 0
+        val target = sorted[0].winRate
         var currentStreak = 0
-        if(sorted.isEmpty()){
-            return currentStreak
-        }
-        val target:String? = sorted[0].winRate
         for (item in sorted) {
-            if (item.winRate.equals(target)) {
-                currentStreak++
-            } else {
-                return currentStreak;
-            }
+            if (item.winRate == target) currentStreak++ else return currentStreak
         }
-
-        return currentStreak;
+        return currentStreak
     }
 
-    fun getLastPullWinRate(bannerType: String, historyItems: List<HistoryItem>): String? {
+    fun getLastPullWinRate(bannerType: String, historyItems: List<HistoryItem>): String {
         val dateFormat = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
-
         val sorted = historyItems.filter {
-            it.wishType.equals(bannerType) and (it.winRate.equals(WinRateType.FIFTY_FIFTY_WIN.displayName) or it.winRate.equals(WinRateType.FIFTY_FIFTY_LOSE.displayName))
-        }.sortedBy { it.winDate?.let { it1 -> dateFormat.parse(it1) } }.reversed()
-        if (sorted.isEmpty()){
-            return WinRateType.FIFTY_FIFTY_WIN.displayName
-        }
-        val target:String? = sorted[0].winRate
-
-
-        return target
+            it.wishType == bannerType && (it.winRate == WinRateType.FIFTY_FIFTY_WIN.displayName || it.winRate == WinRateType.FIFTY_FIFTY_LOSE.displayName)
+        }.sortedBy { it.winDate?.let { d -> dateFormat.parse(d) } }.reversed()
+        return sorted.firstOrNull()?.winRate ?: WinRateType.FIFTY_FIFTY_WIN.displayName
     }
 
 }
