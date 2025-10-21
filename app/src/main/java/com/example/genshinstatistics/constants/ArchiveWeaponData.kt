@@ -679,6 +679,17 @@ object ArchiveWeaponData {
                 rank = 0,
                 type = ItemType.WEAPON
             ),
+            Item(
+                id = 62,
+                name = "Reliquary Օf Truth",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/ic_Reliquary_of_Truth.webp",
+                itemTypeIcon = R.drawable.ic_catalyst,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            )
         )
     }
 }

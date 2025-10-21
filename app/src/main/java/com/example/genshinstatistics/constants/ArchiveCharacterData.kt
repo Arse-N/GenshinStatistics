@@ -692,6 +692,18 @@ object ArchiveCharacterData {
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 58,
+                name = "Nefer",
+                region = Region.NOD_KRAI,
+                iconBgColor = R.drawable.ic_dendro_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_Nefer.webp",
+                birthdate = "11/05",
+                itemTypeIcon = R.drawable.ic_element_dendro,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
             )
         )
     }
