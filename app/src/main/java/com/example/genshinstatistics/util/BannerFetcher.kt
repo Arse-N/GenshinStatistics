@@ -68,25 +68,46 @@ class BannerFetcher {
 
         for (i in 0 until jsonArray.length()) {
             val innerArray = jsonArray.getJSONArray(i)
-
             for (j in 0 until innerArray.length()) {
                 val jsonObject = innerArray.getJSONObject(j)
                 val id = BaseUtil.generateCode()
-                val name = jsonObject.optString("name")
-                val startDate = jsonObject.optString("start")
-                val endDate = jsonObject.optString("end")
-                val imageUrl = jsonObject.optString("image")
+                val name = jsonObject.optString("name", null)
 
-                val start = dateFormat.parse(startDate)
-                val end = dateFormat.parse(endDate)
+                val startString = jsonObject.optString("start", null)
+                val endString = jsonObject.optString("end", null)
 
-                if (start != null && end != null && today.after(start) && today.before(end)) {
-                    if (name.contains("Banner", ignoreCase = true)) {
-                        banners.add(BannerData(id, name, startDate, endDate, imageBaseUrl + imageUrl, j+1))
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+                val startDate: Date? = runCatching {
+                    startString?.let { sdf.parse(it) }
+                }.getOrNull()
+
+                val endDate: Date? = runCatching {
+                    endString?.let { sdf.parse(it) }
+                }.getOrNull()
+
+                val imageUrl = jsonObject.optString("image", null)
+
+                if (
+                    startDate != null &&
+                    endDate != null &&
+                    today.after(startDate) &&
+                    today.before(endDate)
+                ) {
+                    if (!name.isNullOrBlank() && name.contains("Banner", ignoreCase = true)) {
+                        banners.add(
+                            BannerData(
+                                id,
+                                name,
+                                startString,
+                                endString,
+                                imageBaseUrl + imageUrl,
+                                j + 1
+                            )
+                        )
                     }
-                } else {
-                    continue
                 }
+
             }
         }
 

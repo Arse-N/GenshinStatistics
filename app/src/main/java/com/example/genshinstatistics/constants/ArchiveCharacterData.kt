@@ -704,6 +704,42 @@ object ArchiveCharacterData {
                 rarity = 5,
                 rank = 0,
                 type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 59,
+                name = "Durin",
+                region = Region.NOD_KRAI,
+                iconBgColor = R.drawable.ic_pyro_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/Ic_durin.webp",
+                birthdate = "03/14",
+                itemTypeIcon = R.drawable.ic_element_pyro,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 60,
+                name = "Columbina",
+                region = Region.NOD_KRAI,
+                iconBgColor = R.drawable.ic_hydro_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_columbina.webp",
+                birthdate = "01/14",
+                itemTypeIcon = R.drawable.ic_element_hydro,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
+            ),
+            Item(
+                id = 61,
+                name = "Zi Bai",
+                region = Region.LIYUE,
+                iconBgColor = R.drawable.ic_geo_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/character-icons/ic_zibai.webp",
+                birthdate = "05/15",
+                itemTypeIcon = R.drawable.ic_element_geo,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.CHARACTER
             )
         )
     }

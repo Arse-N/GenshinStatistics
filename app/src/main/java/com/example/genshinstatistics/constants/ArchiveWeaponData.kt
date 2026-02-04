@@ -689,6 +689,39 @@ object ArchiveWeaponData {
                 rarity = 5,
                 rank = 0,
                 type = ItemType.WEAPON
+            ),
+            Item(
+                id = 63,
+                name = "Athame Artis",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/ic_Athame_Artis.webp",
+                itemTypeIcon = R.drawable.ic_sword,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 64,
+                name = "Nocturne's Curtain Call",
+                weaponType = WeaponType.CATALYST,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/ic_Nocturnes_Curtain_Call.webp",
+                itemTypeIcon = R.drawable.ic_catalyst,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
+            ),
+            Item(
+                id = 65,
+                name = "Lightbearing Moonshard",
+                weaponType = WeaponType.SWORD,
+                iconBgColor = R.drawable.ic_legendary_bg,
+                icon = "https://ik.imagekit.io/h6nj8eluh/weapon-icons/ic_Lightbearing_Moonshard.webp",
+                itemTypeIcon = R.drawable.ic_sword,
+                rarity = 5,
+                rank = 0,
+                type = ItemType.WEAPON
             )
         )
     }
